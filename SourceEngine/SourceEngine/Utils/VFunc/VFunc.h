@@ -15,3 +15,8 @@ inline T GetVFunc(const void *inst, size_t index, size_t offset = 0)
 {
 	return reinterpret_cast<T>(GetVTable(inst, offset)[index]);
 }
+
+inline void* GetVFuncPtr(void* ptr, std::size_t index)
+{
+	return reinterpret_cast<void*>((*static_cast<int**>(ptr))[index]);
+}

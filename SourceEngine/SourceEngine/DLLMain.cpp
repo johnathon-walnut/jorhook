@@ -1,20 +1,21 @@
-#include "Hooks/Hooks.h"
+#include "Utils/HookManager/HookManager.h"
 
 //If you want to make this a mess which has features for many different games
 //you need to make this process automated.
 //Or then just don't hook WndProc idc
 
+#include "Features/Menu/Menu.h"
+
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
-	Util::InitDebug();
+	//Util::InitDebug();
 
-	gSteam.Init();
-	gInts.Init();
-	gNetVars.Init();
-	gHooks.Init();
-	gConVars.Init();
+	I::Steam.Initialize();
+	I::Initialize();
+	F::HookManager.Initialize();
+	F::Menu.m_Module = reinterpret_cast<HMODULE>(lpParam);
 
-	gDraw.InitFonts
+	G::Draw.InitFonts
 	({
 		//FONT_ESP
 		{ 0x0, "Tahoma", 12, 0, FONTFLAG_OUTLINE },
@@ -34,20 +35,34 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	//csLocal.Render() = Steam ID (STEAM_0:1:201244158)
 	//csLocal.SteamRender() = Steam ID3 ([U:1:402488317])
 
-	//Wait until client is in came, after that we can properly dump the class ID's
-	while (!gInts.Engine->IsInGame())
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+	N::DumpTables();
 
-	gNetVars.DumpClassID();
+	/*Util::PrintDebug("MainThread finished.\n");*/
 
-	Util::PrintDebug("MainThread finished.\n");
+	I::CVars->ConsoleColorPrintf({ 255, 131, 131, 255 }, "[!] jorhook loaded\n");
 
 	//Stuck at this, as long as "panic" key is not pressed.
 	while (!(GetAsyncKeyState(VK_F11) & 0x8000))
+	{
 		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
 
-	gHooks.Release();
-	Util::ReleaseDebug();
+	F::Menu.m_Open = false;
+
+	Sleep(100);
+
+	I::CVars->ConsoleColorPrintf({ 255, 242, 131, 255 }, "[!] jorhook unloaded\n");
+
+	F::HookManager.Release();
+
+	if (F::Menu.m_WndProc)
+	{
+		SetWindowLongW(F::Menu.m_GameHWND, GWL_WNDPROC, reinterpret_cast<LONG>(F::Menu.m_WndProc));
+	}
+
+	Sleep(1000);
+
+	//Util::ReleaseDebug();
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);
 }
 

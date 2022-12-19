@@ -10,4 +10,4 @@ public:
 	DWORD Find(PCCH szModuleName, PCCH szPattern);
 };
 
-extern CPattern gPattern;
+namespace G { inline CPattern Pattern; }

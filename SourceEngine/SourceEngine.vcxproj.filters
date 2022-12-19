@@ -79,23 +79,8 @@
     <Filter Include="SourceEngine\Hooks">
       <UniqueIdentifier>{7f832e95-e88e-4221-97f4-7615f1338ee5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceEngine\Hooks\ClientHook">
-      <UniqueIdentifier>{4842393e-86e0-4c22-8f2d-2ab7c90bff0c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SourceEngine\SDK\NetVars">
       <UniqueIdentifier>{ecf614f6-fe20-4842-917c-bc0cb77dad16}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Hooks\ClientModeHook">
-      <UniqueIdentifier>{c016d03d-eda7-4b2d-9734-9301f61daec7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Hooks\PanelHook">
-      <UniqueIdentifier>{25e4f15d-4db3-4bb0-93c2-9181218e22e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Hooks\SurfaceHook">
-      <UniqueIdentifier>{44efbd77-5a64-41d8-b613-a832ef9e2478}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Hooks\PredictionHook">
-      <UniqueIdentifier>{319cd777-b651-4983-b768-1da0f6092655}</UniqueIdentifier>
     </Filter>
     <Filter Include="SourceEngine\SDK\Main">
       <UniqueIdentifier>{788f9a86-263e-4bf5-b8a2-6317db533511}</UniqueIdentifier>
@@ -115,17 +100,11 @@
     <Filter Include="SourceEngine\SDK\Interfaces\EngineVGui">
       <UniqueIdentifier>{69f26171-46df-47c9-9ee1-30c61063b5f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceEngine\Hooks\EngineVGuiHook">
-      <UniqueIdentifier>{4b43d733-3a91-4fd6-9a26-48f865bb4acb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SourceEngine\SDK\Main\EntityCache">
       <UniqueIdentifier>{99e1a08b-f664-442a-9cbe-b02f34daaaab}</UniqueIdentifier>
     </Filter>
     <Filter Include="SourceEngine\Features">
       <UniqueIdentifier>{609b8292-fad0-4eaf-919f-f3de78e1aa9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Features\Aimbot">
-      <UniqueIdentifier>{e340280b-2a0b-4016-ad4c-961fb8b42bc4}</UniqueIdentifier>
     </Filter>
     <Filter Include="SourceEngine\Utils\Hash">
       <UniqueIdentifier>{f382aed0-a419-448b-8ca9-295d7258b3bf}</UniqueIdentifier>
@@ -142,9 +121,6 @@
     <Filter Include="SourceEngine\SDK\Interfaces\NetChannel">
       <UniqueIdentifier>{26c78d9d-435d-4226-895b-163f109391d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceEngine\Hooks\EngineClientHook">
-      <UniqueIdentifier>{a9c4c513-d678-44fc-805f-d8ebe983ee85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SourceEngine\SDK\Main\ConVars">
       <UniqueIdentifier>{65b8de03-132e-4cdc-8ff3-312b2b330cd0}</UniqueIdentifier>
     </Filter>
@@ -160,20 +136,11 @@
     <Filter Include="SourceEngine\Features\Prediction">
       <UniqueIdentifier>{68dcf426-1b53-4260-938e-f118a81e9cea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceEngine\Features\Visuals">
-      <UniqueIdentifier>{ef7bb3e2-cd7e-45f3-893f-516c5a0b9930}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Features\Visuals\ESP">
-      <UniqueIdentifier>{2e2d1b03-8a97-4594-a642-505f002d4c6d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SourceEngine\Features\Movement">
       <UniqueIdentifier>{972aca15-f9f1-4b9f-b9b5-c2a6029362f6}</UniqueIdentifier>
     </Filter>
     <Filter Include="SourceEngine\Features\Menu">
       <UniqueIdentifier>{1701295f-d125-4872-88f4-4a6d151383c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Features\Visuals\Radar">
-      <UniqueIdentifier>{91f934bb-9451-4eee-acc7-b92d5347af8c}</UniqueIdentifier>
     </Filter>
     <Filter Include="SourceEngine\SDK\Interfaces\DebugOverlay">
       <UniqueIdentifier>{0d529647-6dd5-4163-a7a1-5a7e51cf75b8}</UniqueIdentifier>
@@ -183,9 +150,6 @@
     </Filter>
     <Filter Include="SourceEngine\Features\Menu\Input">
       <UniqueIdentifier>{31516068-4f68-472f-ad69-00d4604eec16}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SourceEngine\Hooks\WndProcHook">
-      <UniqueIdentifier>{3dfb32e8-5f35-4e6d-835f-6d721a0f3e13}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -204,27 +168,6 @@
     <ClCompile Include="SourceEngine\SDK\Interfaces\Interfaces.cpp">
       <Filter>SourceEngine\SDK\Interfaces</Filter>
     </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\ClientHook\ClientHook.cpp">
-      <Filter>SourceEngine\Hooks\ClientHook</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\SDK\NetVars\NetVars.cpp">
-      <Filter>SourceEngine\SDK\NetVars</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\ClientModeHook\ClientModeHook.cpp">
-      <Filter>SourceEngine\Hooks\ClientModeHook</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\PanelHook\PanelHook.cpp">
-      <Filter>SourceEngine\Hooks\PanelHook</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\SurfaceHook\SurfaceHook.cpp">
-      <Filter>SourceEngine\Hooks\SurfaceHook</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\PredictionHook\PredictionHook.cpp">
-      <Filter>SourceEngine\Hooks\PredictionHook</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\Hooks.cpp">
-      <Filter>SourceEngine\Hooks</Filter>
-    </ClCompile>
     <ClCompile Include="SourceEngine\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp">
       <Filter>SourceEngine\SDK\Main\BaseCombatWeapon</Filter>
     </ClCompile>
@@ -237,14 +180,8 @@
     <ClCompile Include="SourceEngine\SDK\Main\DrawUtils\DrawUtils.cpp">
       <Filter>SourceEngine\SDK\Main\DrawUtils</Filter>
     </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\EngineVGuiHook\EngineVGuiHook.cpp">
-      <Filter>SourceEngine\Hooks\EngineVGuiHook</Filter>
-    </ClCompile>
     <ClCompile Include="SourceEngine\SDK\Main\EntityCache\EntityCache.cpp">
       <Filter>SourceEngine\SDK\Main\EntityCache</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\Features\Aimbot\Aimbot.cpp">
-      <Filter>SourceEngine\Features\Aimbot</Filter>
     </ClCompile>
     <ClCompile Include="SourceEngine\Utils\UtlVector\UtlVector.cpp">
       <Filter>SourceEngine\Utils\UtlVector</Filter>
@@ -255,12 +192,6 @@
     <ClCompile Include="SourceEngine\SDK\Interfaces\NetChannel\NetChannel.cpp">
       <Filter>SourceEngine\SDK\Interfaces\NetChannel</Filter>
     </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\EngineClientHook\EngineClientHook.cpp">
-      <Filter>SourceEngine\Hooks\EngineClientHook</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\SDK\Main\ConVars\ConVars.cpp">
-      <Filter>SourceEngine\SDK\Main\ConVars</Filter>
-    </ClCompile>
     <ClCompile Include="SourceEngine\SDK\Main\VisCheck\VisCheck.cpp">
       <Filter>SourceEngine\SDK\Main\VisCheck</Filter>
     </ClCompile>
@@ -270,14 +201,8 @@
     <ClCompile Include="SourceEngine\SDK\Includes\MD5.cpp">
       <Filter>SourceEngine\SDK\Includes</Filter>
     </ClCompile>
-    <ClCompile Include="SourceEngine\Features\Visuals\ESP\ESP.cpp">
-      <Filter>SourceEngine\Features\Visuals\ESP</Filter>
-    </ClCompile>
     <ClCompile Include="SourceEngine\Features\Movement\Movement.cpp">
       <Filter>SourceEngine\Features\Movement</Filter>
-    </ClCompile>
-    <ClCompile Include="SourceEngine\Features\Visuals\Radar\Radar.cpp">
-      <Filter>SourceEngine\Features\Visuals\Radar</Filter>
     </ClCompile>
     <ClCompile Include="SourceEngine\Features\Menu\Menu.cpp">
       <Filter>SourceEngine\Features\Menu</Filter>
@@ -285,9 +210,26 @@
     <ClCompile Include="SourceEngine\Features\Menu\Input\Input.cpp">
       <Filter>SourceEngine\Features\Menu\Input</Filter>
     </ClCompile>
-    <ClCompile Include="SourceEngine\Hooks\WndProcHook\WndProcHook.cpp">
-      <Filter>SourceEngine\Hooks\WndProcHook</Filter>
-    </ClCompile>
+    <ClCompile Include="SourceEngine\Hooks\BaseClient_FrameStageNotify.cpp" />
+    <ClCompile Include="SourceEngine\Utils\HookManager\HookManager.cpp" />
+    <ClCompile Include="SourceEngine\Utils\Minhook\src\buffer.c" />
+    <ClCompile Include="SourceEngine\Utils\Minhook\src\hde\hde32.c" />
+    <ClCompile Include="SourceEngine\Utils\Minhook\src\hde\hde64.c" />
+    <ClCompile Include="SourceEngine\Utils\Minhook\src\hook.c" />
+    <ClCompile Include="SourceEngine\Utils\Minhook\src\trampoline.c" />
+    <ClCompile Include="SourceEngine\Features\Vars.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\EngineVGui_Paint.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\BaseClient_ShutDown.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\WndProc.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\Surface_OnScreenSizeChanged.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\Surface_LockCursor.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\Prediction_RunCommand.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\ClientModeShared_CreateMove.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\ClientModeShared_OverrideView.cpp" />
+    <ClCompile Include="SourceEngine\SDK\NetVars\NetVars.cpp" />
+    <ClCompile Include="SourceEngine\Utils\ResourceInfo.cpp" />
+    <ClCompile Include="SourceEngine\Features\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="SourceEngine\Features\ESP\ESP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceEngine\Utils\Math\Math.h">
@@ -295,9 +237,6 @@
     </ClInclude>
     <ClInclude Include="SourceEngine\Utils\Pattern\Pattern.h">
       <Filter>SourceEngine\Utils\Pattern</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Utils\VMT\VMT.h">
-      <Filter>SourceEngine\Utils\VMT</Filter>
     </ClInclude>
     <ClInclude Include="SourceEngine\Utils\Color\Color.h">
       <Filter>SourceEngine\Utils\Color</Filter>
@@ -377,29 +316,11 @@
     <ClInclude Include="SourceEngine\SDK\Interfaces\Interfaces.h">
       <Filter>SourceEngine\SDK\Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\ClientHook\ClientHook.h">
-      <Filter>SourceEngine\Hooks\ClientHook</Filter>
-    </ClInclude>
     <ClInclude Include="SourceEngine\SDK\NetVars\NetVars.h">
       <Filter>SourceEngine\SDK\NetVars</Filter>
     </ClInclude>
     <ClInclude Include="SourceEngine\SDK\SDK.h">
       <Filter>SourceEngine\SDK</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\ClientModeHook\ClientModeHook.h">
-      <Filter>SourceEngine\Hooks\ClientModeHook</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\PanelHook\PanelHook.h">
-      <Filter>SourceEngine\Hooks\PanelHook</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\SurfaceHook\SurfaceHook.h">
-      <Filter>SourceEngine\Hooks\SurfaceHook</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\PredictionHook\PredictionHook.h">
-      <Filter>SourceEngine\Hooks\PredictionHook</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\Hooks.h">
-      <Filter>SourceEngine\Hooks</Filter>
     </ClInclude>
     <ClInclude Include="SourceEngine\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.h">
       <Filter>SourceEngine\SDK\Main\BaseCombatWeapon</Filter>
@@ -416,14 +337,8 @@
     <ClInclude Include="SourceEngine\SDK\Interfaces\EngineVGui\EngineVGui.h">
       <Filter>SourceEngine\SDK\Interfaces\EngineVGui</Filter>
     </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\EngineVGuiHook\EngineVGuiHook.h">
-      <Filter>SourceEngine\Hooks\EngineVGuiHook</Filter>
-    </ClInclude>
     <ClInclude Include="SourceEngine\SDK\Main\EntityCache\EntityCache.h">
       <Filter>SourceEngine\SDK\Main\EntityCache</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Features\Aimbot\Aimbot.h">
-      <Filter>SourceEngine\Features\Aimbot</Filter>
     </ClInclude>
     <ClInclude Include="SourceEngine\Utils\UtlVector\UtlVector.h">
       <Filter>SourceEngine\Utils\UtlVector</Filter>
@@ -442,12 +357,6 @@
     </ClInclude>
     <ClInclude Include="SourceEngine\SDK\Interfaces\NetChannel\NetChannel.h">
       <Filter>SourceEngine\SDK\Interfaces\NetChannel</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\EngineClientHook\EngineClientHook.h">
-      <Filter>SourceEngine\Hooks\EngineClientHook</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\SDK\Main\ConVars\ConVars.h">
-      <Filter>SourceEngine\SDK\Main\ConVars</Filter>
     </ClInclude>
     <ClInclude Include="SourceEngine\SDK\Main\VisCheck\VisCheck.h">
       <Filter>SourceEngine\SDK\Main\VisCheck</Filter>
@@ -476,14 +385,8 @@
     <ClInclude Include="SourceEngine\SDK\Includes\MD5.h">
       <Filter>SourceEngine\SDK\Includes</Filter>
     </ClInclude>
-    <ClInclude Include="SourceEngine\Features\Visuals\ESP\ESP.h">
-      <Filter>SourceEngine\Features\Visuals\ESP</Filter>
-    </ClInclude>
     <ClInclude Include="SourceEngine\Features\Movement\Movement.h">
       <Filter>SourceEngine\Features\Movement</Filter>
-    </ClInclude>
-    <ClInclude Include="SourceEngine\Features\Visuals\Radar\Radar.h">
-      <Filter>SourceEngine\Features\Visuals\Radar</Filter>
     </ClInclude>
     <ClInclude Include="SourceEngine\SDK\Interfaces\DebugOverlay\DebugOverlay.h">
       <Filter>SourceEngine\SDK\Interfaces\DebugOverlay</Filter>
@@ -497,8 +400,28 @@
     <ClInclude Include="SourceEngine\Features\Menu\Input\Input.h">
       <Filter>SourceEngine\Features\Menu\Input</Filter>
     </ClInclude>
-    <ClInclude Include="SourceEngine\Hooks\WndProcHook\WndProcHook.h">
-      <Filter>SourceEngine\Hooks\WndProcHook</Filter>
-    </ClInclude>
+    <ClInclude Include="SourceEngine\Hooks\Hook.h" />
+    <ClInclude Include="SourceEngine\Utils\HookManager\HookManager.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\include\MinHook.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\src\buffer.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\src\hde\hde32.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\src\hde\hde64.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\src\hde\pstdint.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\src\hde\table32.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\src\hde\table64.h" />
+    <ClInclude Include="SourceEngine\Utils\Minhook\src\trampoline.h" />
+    <ClInclude Include="SourceEngine\Features\Vars.h" />
+    <ClInclude Include="SourceEngine\Utils\JSON\JSON.hpp" />
+    <ClInclude Include="SourceEngine\Utils\ResourceInfo.h" />
+    <ClInclude Include="SourceEngine\Features\Menu\JORHOOK.h" />
+    <ClInclude Include="SourceEngine\Features\Aimbot\Aimbot.h" />
+    <ClInclude Include="SourceEngine\Features\ESP\ESP.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="jorhook.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SourceEngine\Features\Menu\jorhook.bin" />
+    <None Include="SourceEngine\Features\Menu\jorhook.vtf" />
   </ItemGroup>
 </Project>

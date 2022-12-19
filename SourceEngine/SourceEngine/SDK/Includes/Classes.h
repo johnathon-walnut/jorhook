@@ -183,14 +183,18 @@ public:
 	bool	hasbeenpredicted;
 };
 
-class C_ClientClass
+typedef void* (*CreateClientClassFn)(int entnum, int serialNum);
+typedef void* (*CreateEventFn)();
+
+class ClientClass
 {
 public:
-	BYTE Pad[8];
-	char* szNetworkName;
-	RecvTable* pRecvTable;
-	C_ClientClass* pNextClass;
-	int iClassID;
+	CreateClientClassFn		m_pCreateFn;
+	CreateEventFn			m_pCreateEventFn;
+	const char* m_pNetworkName;
+	RecvTable* m_pRecvTable;
+	ClientClass* m_pNext;
+	int						m_ClassID;
 };
 
 class C_BaseEntity; //forward declare

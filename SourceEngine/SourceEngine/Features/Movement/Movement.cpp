@@ -1,26 +1,32 @@
 #include "Movement.h"
 
-void C_Movement::DoBunnyhop(C_UserCmd* pCmd)
+void CMovement::DoBunnyhop(C_UserCmd* pCmd)
 {
-	if (auto pLocal{ gEntCache.pLocal })
+	if (auto pLocal{ G::EntityCache.pLocal })
 	{
-		if (!bBunnyhop || !pLocal->IsAlive())
+		if (!V::Movement_Bunnyhop || !pLocal->IsAlive())
+		{
 			return;
+		}
 
 		static bool bJumpState = false;
 
 		if (pCmd->buttons & IN_JUMP)
 		{
 			if (!bJumpState && !pLocal->IsOnGround())
+			{
 				pCmd->buttons &= ~IN_JUMP;
+			}
 
 			else if (bJumpState)
+			{
 				bJumpState = false;
+			}
 		}
 
 		else if (!bJumpState)
+		{
 			bJumpState = true;
+		}
 	}
 }
-
-C_Movement gMovement;

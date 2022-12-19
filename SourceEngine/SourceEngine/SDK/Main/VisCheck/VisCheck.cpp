@@ -18,7 +18,7 @@ bool C_TraceFilterWorldAndPropsOnly::ShouldHitEntity(void *pEntityHandle, int nC
 {
 	C_BaseEntity *pEntity = reinterpret_cast<C_BaseEntity *>(pEntityHandle);
 
-	if (pEntity->GetClientClass()->iClassID == CCSPlayer)
+	if (pEntity->GetClientClass()->m_ClassID == CTFPlayer)
 		return false;
 
 	return !(pEntityHandle == pSkip);
@@ -33,7 +33,7 @@ bool C_TraceFilterWorldAndPropsOnlyOther::ShouldHitEntity(void *pEntityHandle, i
 {
 	C_BaseEntity *pEntity = reinterpret_cast<C_BaseEntity *>(pEntityHandle);
 
-	if (pEntity->GetClientClass()->iClassID == CCSPlayer)
+	if (pEntity->GetClientClass()->m_ClassID == CTFPlayer)
 		return false;
 
 	return !(pEntityHandle == pSkip);
@@ -46,7 +46,7 @@ TraceType_t C_TraceFilterWorldAndPropsOnlyOther::GetTraceType() const
 
 //=======================================================================================================
 
-bool C_VisCheck::Pos(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to)
+bool CVisCheck::Pos(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to)
 {
 	Ray_t ray;
 	ray.Init(from, to);
@@ -57,12 +57,12 @@ bool C_VisCheck::Pos(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& fro
 	filter.pSkip = pSkip;
 
 	C_GameTrace trace;
-	gInts.EngineTrace->TraceRay(ray, mask, &filter, &trace);
+	I::EngineTrace->TraceRay(ray, mask, &filter, &trace);
 
 	return ((trace.entity && trace.entity == pEntity) || trace.flFraction >= 0.99f);
 }
 
-bool C_VisCheck::PosHitboxId(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to, int nHitbox)
+bool CVisCheck::PosHitboxId(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to, int nHitbox)
 {
 	Ray_t ray;
 	ray.Init(from, to);
@@ -73,12 +73,12 @@ bool C_VisCheck::PosHitboxId(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const V
 	filter.pSkip = pSkip;
 
 	C_GameTrace trace;
-	gInts.EngineTrace->TraceRay(ray, mask, &filter, &trace);
+	I::EngineTrace->TraceRay(ray, mask, &filter, &trace);
 
 	return (trace.entity && trace.entity == pEntity && trace.hitbox == nHitbox);
 }
 
-bool C_VisCheck::PosHitboxIdOut(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to, int& nHitboxOut)
+bool CVisCheck::PosHitboxIdOut(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to, int& nHitboxOut)
 {
 	Ray_t ray;
 	ray.Init(from, to);
@@ -89,7 +89,7 @@ bool C_VisCheck::PosHitboxIdOut(C_BaseEntity* pSkip, C_BaseEntity* pEntity, cons
 	filter.pSkip = pSkip;
 
 	C_GameTrace trace;
-	gInts.EngineTrace->TraceRay(ray, mask, &filter, &trace);
+	I::EngineTrace->TraceRay(ray, mask, &filter, &trace);
 
 	if (trace.entity && trace.entity == pEntity)
 	{
@@ -99,5 +99,3 @@ bool C_VisCheck::PosHitboxIdOut(C_BaseEntity* pSkip, C_BaseEntity* pEntity, cons
 
 	return false;
 }
-
-C_VisCheck gVisCheck;

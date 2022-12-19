@@ -4,9 +4,9 @@
 class C_BaseClientDLL
 {
 public:
-	C_ClientClass *GetAllClasses()
+	ClientClass *GetAllClasses()
 	{
-		typedef C_ClientClass *(__thiscall *FN)(PVOID);
+		typedef ClientClass *(__thiscall *FN)(PVOID);
 		return GetVFunc<FN>(this, 8)(this);
 	}
 

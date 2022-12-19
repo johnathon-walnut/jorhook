@@ -17,4 +17,4 @@ public:
 	PVOID Get(PCCH szModule, PCCH szObject);
 };
 
-extern CInterface gInterface;
+namespace G { inline CInterface Interface; }

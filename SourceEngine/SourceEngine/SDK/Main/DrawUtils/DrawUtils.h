@@ -7,7 +7,7 @@ struct ScreenSize_t
 	void Update();
 };
 
-extern ScreenSize_t gScreenSize;
+namespace G { inline ScreenSize_t ScreenSize; }
 
 struct Font_t
 {
@@ -37,6 +37,22 @@ struct Draw_t
 	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr);
 	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color);
 	void Icon(int x, int y, int w, int h, int nIndex);
+	/// Clamp and round float vals to int.  The values are in the 0...255 range.
+	inline Color_t FloatRGBAToColor(float r, float g, float b, float a)
+	{
+		return Color_t(
+			(unsigned char)std::clamp(r + .5f, 0.0f, 255.0f),
+			(unsigned char)std::clamp(g + .5f, 0.0f, 255.0f),
+			(unsigned char)std::clamp(b + .5f, 0.0f, 255.0f),
+			(unsigned char)std::clamp(a + .5f, 0.0f, 255.0f)
+		);
+	}
+
+	inline float LerpFloat(float x0, float x1, float t)
+	{
+		return x0 + (x1 - x0) * t;
+	}
+	Color_t LerpColor(const Color_t& c0, const Color_t& c1, float t);
 
 
 	Color_t GetTeamColor(int nTeamNum);
@@ -53,7 +69,7 @@ enum Fonts_t
 	FONT_MENU
 };
 
-extern Draw_t gDraw;
+namespace G { inline Draw_t Draw; }
 
 #pragma warning (disable : 6385)
 #pragma warning (disable : 26451)
@@ -61,23 +77,19 @@ extern Draw_t gDraw;
 
 #include "../GlobalInfo/GlobalInfo.h"
 
-namespace Math
+inline bool W2S(const Vec3& vOrigin, Vec2& vScreen)
 {
-	inline bool W2S(const Vec3& vOrigin, Vec3& vScreen)
+	const matrix3x4& worldToScreen = gGlobalInfo.WorldToProjection.As3x4();
+
+	float w = worldToScreen[3][0] * vOrigin[0] + worldToScreen[3][1] * vOrigin[1] + worldToScreen[3][2] * vOrigin[2] + worldToScreen[3][3];
+
+	if (w > 0.001)
 	{
-		const matrix3x4& worldToScreen = gGlobalInfo.WorldToProjection.As3x4();
-
-		float w = worldToScreen[3][0] * vOrigin[0] + worldToScreen[3][1] * vOrigin[1] + worldToScreen[3][2] * vOrigin[2] + worldToScreen[3][3];
-		vScreen.z = 0;
-
-		if (w > 0.001)
-		{
-			float fl1DBw = 1 / w;
-			vScreen.x = (gScreenSize.w / 2) + (0.5 * ((worldToScreen[0][0] * vOrigin[0] + worldToScreen[0][1] * vOrigin[1] + worldToScreen[0][2] * vOrigin[2] + worldToScreen[0][3]) * fl1DBw) * gScreenSize.w + 0.5);
-			vScreen.y = (gScreenSize.h / 2) - (0.5 * ((worldToScreen[1][0] * vOrigin[0] + worldToScreen[1][1] * vOrigin[1] + worldToScreen[1][2] * vOrigin[2] + worldToScreen[1][3]) * fl1DBw) * gScreenSize.h + 0.5);
-			return true;
-		}
-
-		return false;
+		float fl1DBw = 1 / w;
+		vScreen.x = (G::ScreenSize.w / 2) + (0.5 * ((worldToScreen[0][0] * vOrigin[0] + worldToScreen[0][1] * vOrigin[1] + worldToScreen[0][2] * vOrigin[2] + worldToScreen[0][3]) * fl1DBw) * G::ScreenSize.w + 0.5);
+		vScreen.y = (G::ScreenSize.h / 2) - (0.5 * ((worldToScreen[1][0] * vOrigin[0] + worldToScreen[1][1] * vOrigin[1] + worldToScreen[1][2] * vOrigin[2] + worldToScreen[1][3]) * fl1DBw) * G::ScreenSize.h + 0.5);
+		return true;
 	}
+
+	return false;
 }

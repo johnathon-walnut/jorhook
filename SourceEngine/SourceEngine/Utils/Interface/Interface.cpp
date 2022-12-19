@@ -1,26 +1,19 @@
 #include "Interface.h"
 
+#undef interface
+
 PVOID CInterface::Get(PCCH szModule, PCCH szObject)
 {
-	HMODULE Module = GetModuleHandleA(szModule);
-
-	if (!Module)
-		return nullptr;
-
-	DWORD CreateInterface	= (DWORD)GetProcAddress(Module, "CreateInterface");
-	DWORD ShortJump			= (DWORD)CreateInterface + 5;
-	DWORD Jump				= (((DWORD)CreateInterface + 5) + *(DWORD *)ShortJump) + 4;
-	Interface_t *List		= **(Interface_t ***)(Jump + 6);
-
-	while (List)
+	HMODULE hModule = GetModuleHandleA(szModule);
+	if (hModule)
 	{
-		if (List && (strstr(List->szInterfaceName, szObject) && (strlen(List->szInterfaceName) - strlen(szObject)) < 5))
-			return List->Interface();
-
-		List = List->NextInterface;
+		auto CreateInterface = reinterpret_cast<void* (__cdecl*)(const char* name, int* returnCode)>(GetProcAddress(hModule, "CreateInterface"));
+		int returnCode = 0;
+		void* interface = CreateInterface(szObject, &returnCode);
+		if (interface)
+		{
+			return interface;
+		}
 	}
-
 	return nullptr;
 }
-
-CInterface gInterface;

@@ -3,7 +3,6 @@
 #include "Color/Color.h" //this includes math
 #include "Interface/Interface.h"
 #include "VFunc/VFunc.h"
-#include "VMT/VMT.h"
 #include "Pattern/Pattern.h"
 #include "Hash/Hash.h"
 #include "UtlVector/UtlVector.h"

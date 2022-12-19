@@ -58,5 +58,3 @@ DWORD CPattern::Find(PCCH szModuleName, PCCH szPattern)
 
 	return FindPattern(((DWORD)hmModule) + pNTHeaders->OptionalHeader.BaseOfCode, ((DWORD)hmModule) + pNTHeaders->OptionalHeader.SizeOfCode, szPattern);
 }
-
-CPattern gPattern;

@@ -1,12 +1,11 @@
 #pragma once
-#include "../../SDK/SDK.h"
+#include "../Vars.h"
 
-class C_Movement
+class CMovement
 {
 public:
-	bool bBunnyhop = true;
 
 	void DoBunnyhop(C_UserCmd* pCmd);
 };
 
-extern C_Movement gMovement;
+MAKE_FEATURE(CMovement, Movement);

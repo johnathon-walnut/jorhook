@@ -8,9 +8,13 @@ int C_LocalPrediction::GetTickbase(C_UserCmd *pCmd, C_BaseEntity *pLocal)
 	if (pCmd)
 	{
 		if (!pLastCmd || pLastCmd->hasbeenpredicted)
-			nTick = pLocal->GetTickBase();
-
-		else nTick++;
+		{
+			nTick = pLocal->m_nTickBase();
+		}
+		else
+		{
+			nTick++;
+		}
 
 		pLastCmd = pCmd;
 	}
@@ -20,71 +24,73 @@ int C_LocalPrediction::GetTickbase(C_UserCmd *pCmd, C_BaseEntity *pLocal)
 
 void C_LocalPrediction::Start(C_UserCmd *pCmd)
 {
-	if (!gInts.MoveHelper)
+	if (!I::MoveHelper)
+	{
 		return;
+	}
 
-	C_BaseEntity *pLocal = gEntCache.pLocal;
+	C_BaseEntity *pLocal = G::EntityCache.pLocal;
 
 	if (pLocal && pLocal->IsAlive())
 	{
-		pLocal->SetCurrentCmd(pCmd);
+		pLocal->m_pCurrentCmd() = pCmd;
 		
-		*gInts.RandomSeed = MD5_PseudoRandom(pCmd->command_number) & std::numeric_limits<int>::max();
+		*I::RandomSeed = MD5_PseudoRandom(pCmd->command_number) & std::numeric_limits<int>::max();
 
-		fOldCurrentTime = gInts.GlobalVars->curtime;
-		fOldFrameTime	= gInts.GlobalVars->frametime;
-		nOldTickCount	= gInts.GlobalVars->tickcount;
-		nOldFlags       = pLocal->GetFlags();
+		fOldCurrentTime = I::GlobalVars->curtime;
+		fOldFrameTime	= I::GlobalVars->frametime;
+		nOldTickCount	= I::GlobalVars->tickcount;
+		nOldFlags       = pLocal->m_fFlags();
 
-		const int nOldTickBase				= pLocal->GetTickBase();
-		const bool bOldIsFirstPrediction	= gInts.Prediction->m_bFirstTimePredicted;
-		const bool bOldInPrediction			= gInts.Prediction->m_bInPrediction;
+		const int nOldTickBase				= pLocal->m_nTickBase();
+		const bool bOldIsFirstPrediction	= I::Prediction->m_bFirstTimePredicted;
+		const bool bOldInPrediction			= I::Prediction->m_bInPrediction;
 		
-		gInts.GlobalVars->curtime	= TICKS_TO_TIME(GetTickbase(pCmd, pLocal));
-		gInts.GlobalVars->frametime = (gInts.Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL);
-		gInts.GlobalVars->tickcount = GetTickbase(pCmd, pLocal);
+		I::GlobalVars->curtime	= TICKS_TO_TIME(GetTickbase(pCmd, pLocal));
+		I::GlobalVars->frametime = (I::Prediction->m_bEnginePaused ? 0.0f : TICK_INTERVAL);
+		I::GlobalVars->tickcount = GetTickbase(pCmd, pLocal);
 
-		gInts.Prediction->m_bFirstTimePredicted = false;
-		gInts.Prediction->m_bInPrediction		= true;
+		I::Prediction->m_bFirstTimePredicted = false;
+		I::Prediction->m_bInPrediction		= true;
 
 		//skipped buttons
 
-		//TODO: CheckMovingGround(pLocal, gInts.GlobalVars->frametime);
+		//TODO: CheckMovingGround(pLocal, I::GlobalVars->frametime);
 
-		gInts.Prediction->SetLocalViewAngles(pCmd->viewangles);
+		I::Prediction->SetLocalViewAngles(pCmd->viewangles);
 
-		gInts.MoveHelper->SetHost(pLocal);
+		I::MoveHelper->SetHost(pLocal);
 
-		gInts.Prediction->SetupMove(pLocal, pCmd, gInts.MoveHelper, &moveData);
-		gInts.GameMovement->ProcessMovement(pLocal, &moveData);
-		gInts.Prediction->FinishMove(pLocal, pCmd, &moveData);
+		I::Prediction->SetupMove(pLocal, pCmd, I::MoveHelper, &moveData);
+		I::GameMovement->ProcessMovement(pLocal, &moveData);
+		I::Prediction->FinishMove(pLocal, pCmd, &moveData);
 
-		pLocal->SetTickBase(nOldTickBase);
+		pLocal->m_nTickBase() = nOldTickBase;
 
-		gInts.Prediction->m_bInPrediction		= bOldInPrediction;
-		gInts.Prediction->m_bFirstTimePredicted = bOldIsFirstPrediction;
+		I::Prediction->m_bInPrediction		= bOldInPrediction;
+		I::Prediction->m_bFirstTimePredicted = bOldIsFirstPrediction;
 	}
 }
 
 void C_LocalPrediction::End(C_UserCmd *pCmd)
 {
-	if (!gInts.MoveHelper)
+	if (!I::MoveHelper)
+	{
 		return;
+	}
 
-	C_BaseEntity *pLocal = gEntCache.pLocal;
+	C_BaseEntity *pLocal = G::EntityCache.pLocal;
 
 	if (pLocal && pLocal->IsAlive())
 	{
-		gInts.MoveHelper->SetHost(nullptr);
+		I::MoveHelper->SetHost(nullptr);
 
-		gInts.GlobalVars->curtime	= fOldCurrentTime;
-		gInts.GlobalVars->frametime = fOldFrameTime;
-		gInts.GlobalVars->tickcount = nOldTickCount;
+		I::GlobalVars->curtime	= fOldCurrentTime;
+		I::GlobalVars->frametime = fOldFrameTime;
+		I::GlobalVars->tickcount = nOldTickCount;
 		
-		pLocal->SetCurrentCmd(nullptr);
+		pLocal->m_pCurrentCmd() = nullptr;
 
-		*gInts.RandomSeed = -1;
+		*I::RandomSeed = -1;
 	}
 }
-
-C_LocalPrediction gPrediction;

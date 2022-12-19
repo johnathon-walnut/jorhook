@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../SDK/SDK.h"
+#include "../Vars.h"
 
 class C_LocalPrediction
 {
@@ -20,4 +20,4 @@ public:
 	int nOldFlags = 0;
 };
 
-extern C_LocalPrediction gPrediction;
+MAKE_FEATURE(C_LocalPrediction, Prediction);

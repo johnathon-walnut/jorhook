@@ -5,7 +5,8 @@ enum struct EItemType {
 	DEFAULT,
 	INT,
 	FLOAT,
-	BOOL
+	BOOL,
+	BYTE
 };
 
 class CItemBase
@@ -52,6 +53,50 @@ public:
 	}
 };
 
+enum class EClrType
+{
+	r, g, b, a
+};
+
+class CItemClr : public CItemBase
+{
+public:
+	Color_t* m_Ptr = nullptr;
+	EClrType m_Type;
+	std::vector<std::pair<int, std::string>> m_Aliases = {};
+	int m_Min = std::numeric_limits<int>::min();
+	int m_Max = std::numeric_limits<int>::max();
+
+	int m_AliasIdx = 0;
+
+	CItemClr(const std::string& name,
+			 Color_t* ptr,
+			 EClrType type,
+			 std::vector<std::pair<int, std::string>> aliases = {},
+			 int min = 0,
+			 int max = 255)
+		: CItemBase(EItemType::BYTE, name), m_Type(type), m_Ptr(ptr), m_Aliases(aliases), m_Min(min), m_Max(max)
+	{
+		if (!m_Aliases.empty())
+		{
+			bool Found = false;
+
+			for (const auto& Alias : this->m_Aliases)
+			{
+				if (*reinterpret_cast<int*>(this->m_Ptr) == Alias.first)
+				{
+					this->m_AliasIdx = Alias.first;
+					Found = true;
+					break;
+				}
+			}
+
+			if (!Found)
+				*reinterpret_cast<int*>(this->m_Ptr) = this->m_Aliases.at(0).first;
+		}
+	}
+};
+
 class CItemFloat : public CItemBase
 {
 public:
@@ -88,6 +133,14 @@ class CItemList
 public:
 	std::string m_Name = {};
 	std::vector<CItemGroup *> m_ItemGroups = {};
+
+	int m_X, m_Y;
+	int m_Height = 650;
+	POINT m_Delta;
+	bool m_bDrag = false;
+	bool m_bMove = false;
+
+	void Drag(int mousex, int mousey);
 };
 
 class CMenu
@@ -100,8 +153,12 @@ public:
 	bool m_Open = false;
 	bool m_OnAimbotFOV = false;
 
+	WNDPROC m_WndProc;
+	HWND m_GameHWND;
+	HMODULE m_Module;
+
 	~CMenu();
 	void Run();
 };
 
-extern CMenu gMenu;
+MAKE_FEATURE(CMenu, Menu);

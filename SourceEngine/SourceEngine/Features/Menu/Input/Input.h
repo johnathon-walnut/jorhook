@@ -28,4 +28,4 @@ public:
 	EKeyState GetMouse(int key);
 };
 
-extern C_Input gInput;
+namespace G { inline C_Input Input; }

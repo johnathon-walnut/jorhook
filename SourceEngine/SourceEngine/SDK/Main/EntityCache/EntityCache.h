@@ -21,10 +21,11 @@ private:
 public:
 	C_BaseEntity *pLocal = nullptr;
 	C_BaseCombatWeapon *pLocalWeapon = nullptr;
-
+	bool m_bFriends[129];
+	void UpdateFriends();
 	void Fill();
 	void Clear();
 	const std::vector<C_BaseEntity *> &GetGroup(const GroupType_t &group);
 };
 
-extern C_EntityCache gEntCache;
+namespace G { inline C_EntityCache EntityCache; }

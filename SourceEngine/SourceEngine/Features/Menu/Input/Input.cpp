@@ -2,19 +2,27 @@
 
 void C_Input::Update()
 {
-	for (auto &Key : gInput.m_Keyboard) {
+	for (auto &Key : G::Input.m_Keyboard) {
 		if (Key.second != EKeyState::NONE)
+		{
 			Key.second = EKeyState::HELD;
+		}
 	}
 
-	if (gInput.m_RMouse != EKeyState::NONE)
-		gInput.m_RMouse = EKeyState::HELD;
+	if (m_RMouse != EKeyState::NONE)
+	{
+		m_RMouse = EKeyState::HELD;
+	}
 
-	if (gInput.m_LMouse != EKeyState::NONE)
-		gInput.m_LMouse = EKeyState::HELD;
+	if (m_LMouse != EKeyState::NONE)
+	{
+		m_LMouse = EKeyState::HELD;
+	}
 
-	if (gInput.m_MMouse != EKeyState::NONE)
-		gInput.m_MMouse = EKeyState::HELD;
+	if (m_MMouse != EKeyState::NONE)
+	{
+		m_MMouse = EKeyState::HELD;
+	}
 }
 
 EKeyState C_Input::GetKey(int key)
@@ -33,5 +41,3 @@ EKeyState C_Input::GetMouse(int key)
 
 	return {};
 }
-
-C_Input gInput;

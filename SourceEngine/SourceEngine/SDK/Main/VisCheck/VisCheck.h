@@ -26,7 +26,7 @@ public:
 	C_BaseEntity *pSkip = nullptr;
 };
 
-class C_VisCheck
+class CVisCheck
 {
 public:
 	bool Pos(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to);
@@ -34,4 +34,7 @@ public:
 	bool PosHitboxIdOut(C_BaseEntity* pSkip, C_BaseEntity* pEntity, const Vec3& from, const Vec3& to, int& nHitboxOut);
 };
 
-extern C_VisCheck gVisCheck;
+namespace G
+{
+	inline CVisCheck VisCheck;
+}

@@ -33,35 +33,33 @@ public:
 	ISteamUser017* User = nullptr;
 	ISteamUtils007* Utils007 = nullptr;
 
-	void Init();
+	void Initialize();
 };
 
-class C_Interfaces
-{
-public:
-	C_BaseClientDLL* Client = nullptr;
-	C_ClientDLLSharedAppSystems* ClientShared = nullptr;
-	C_ClientModeShared* ClientMode = nullptr;
-	C_EngineClient* Engine = nullptr;
-	C_Panel* Panel = nullptr;
-	C_Surface* Surface = nullptr;
-	C_ClientEntityList* EntityList = nullptr;
-	C_ModelInfoClient* ModelInfo = nullptr;
-	C_EngineTrace* EngineTrace = nullptr;
-	C_Prediction* Prediction = nullptr;
-	C_GameMovement* GameMovement = nullptr;
-	C_MoveHelper* MoveHelper = nullptr;
-	ICvar* CVars = nullptr; //hello, I am ICvar and I do not associate with C_ niggas
-	C_GlobalVarsBase* GlobalVars = nullptr;
-	C_EngineVGui* EngineVGui = nullptr;
-	int32_t* RandomSeed = nullptr; //What about me?!?!
-	void* DemoPlayer = nullptr; //hHaha we're getting STRONG!!1
-	C_GameEventManager* GameEvent = nullptr; //Normally this would be another traitor but I added C_
-	C_RenderView* RenderView = nullptr;
-	IDebugOverlay* DebugOverlay = nullptr; //Back at it MF
+namespace I {
+	inline C_BaseClientDLL* Client = nullptr;
+	inline C_ClientDLLSharedAppSystems* ClientShared = nullptr;
+	inline C_ClientModeShared* ClientMode = nullptr;
+	inline C_EngineClient* Engine = nullptr;
+	inline C_Panel* Panel = nullptr;
+	inline C_Surface* Surface = nullptr;
+	inline ISurface* MatSystemSurface = nullptr;
+	inline C_ClientEntityList* EntityList = nullptr;
+	inline C_ModelInfoClient* ModelInfo = nullptr;
+	inline C_EngineTrace* EngineTrace = nullptr;
+	inline C_Prediction* Prediction = nullptr;
+	inline C_GameMovement* GameMovement = nullptr;
+	inline C_MoveHelper* MoveHelper = nullptr;
+	inline ICvar* CVars = nullptr; //hello, I am ICvar and I do not associate with C_ niggas
+	inline C_GlobalVarsBase* GlobalVars = nullptr;
+	inline C_EngineVGui* EngineVGui = nullptr;
+	inline int32_t* RandomSeed = nullptr; //What about me?!?!
+	inline void* DemoPlayer = nullptr; //hHaha we're getting STRONG!!1
+	inline C_GameEventManager* GameEvent = nullptr; //Normally this would be another traitor but I added C_
+	inline C_RenderView* RenderView = nullptr;
+	inline IDebugOverlay* DebugOverlay = nullptr; //Back at it MF
 
-	void Init();
+	void Initialize();
+
+	inline C_SteamInterfaces Steam;
 };
-
-extern C_Interfaces gInts;
-extern C_SteamInterfaces gSteam;

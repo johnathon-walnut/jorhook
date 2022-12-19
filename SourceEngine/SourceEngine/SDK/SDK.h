@@ -8,13 +8,12 @@
 #include "Main/EntityCache/EntityCache.h"
 #include "Main/VisCheck/VisCheck.h"
 #include "Main/GlobalInfo/GlobalInfo.h"
-#include "Main/ConVars/ConVars.h"
 
 #pragma warning( disable : 4996 )
 
-#define TIME_TO_TICKS( dt )	( (int)( 0.5f + (float)(dt) / gInts.GlobalVars->interval_per_tick ) )
-#define TICKS_TO_TIME( t )	( gInts.GlobalVars->interval_per_tick * ( t ) )
-#define TICK_INTERVAL		( gInts.GlobalVars->interval_per_tick )
+#define TIME_TO_TICKS( dt )	( (int)( 0.5f + (float)(dt) / I::GlobalVars->interval_per_tick ) )
+#define TICKS_TO_TIME( t )	( I::GlobalVars->interval_per_tick * ( t ) )
+#define TICK_INTERVAL		( I::GlobalVars->interval_per_tick )
 
 namespace Util
 {
@@ -23,7 +22,7 @@ namespace Util
 	{
 		Ray_t ray;
 		ray.Init(vecStart, vecEnd, vecHullMin, vecHullMax);
-		gInts.EngineTrace->TraceRay(ray, nMask, pFilter, pTrace);
+		I::EngineTrace->TraceRay(ray, nMask, pFilter, pTrace);
 	}
 
 	inline void InitDebug() {
@@ -40,9 +39,14 @@ namespace Util
 #endif
 	}
 
-	inline void PrintDebug(const char* szString) {
+	inline void PrintDebug(const char* szString, ...) {
 #ifdef _DEBUG
-		printf(szString);
+		va_list argptr;
+		va_start(argptr, szString);
+		vfprintf(stderr, szString, argptr);
+		va_end(argptr);
 #endif
 	}
 }
+
+#define MAKE_FEATURE(class, name) namespace F { inline class name; }
