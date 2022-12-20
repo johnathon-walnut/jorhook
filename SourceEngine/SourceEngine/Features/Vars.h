@@ -13,9 +13,9 @@ namespace CFG
 
 	inline std::vector<ConfigVarInitializer> Vars{};
 
-	static void Save(const char* path);
+	void Save(const char* path);
 
-	static void Load(const char* path);
+	void Load(const char* path);
 }
 
 #define CFGVAR(var, val) namespace V { inline auto var{ val }; }\
@@ -31,6 +31,7 @@ namespace ConfigInitializers\
 #define CFGVAR_NOSAVE(var, val) namespace V { inline auto var { val }; }
 
 CFGVAR(Movement_Bunnyhop, true);
+CFGVAR(Movement_NoPush, true);
 
 CFGVAR(Menu_Text, Color_t({ 220, 220, 220, 255 }));
 CFGVAR(Menu_ListWidth, int(200));
@@ -46,6 +47,7 @@ CFGVAR(Menu_ItemHover, Color_t({ 225, 177, 44, 255 }));
 
 CFGVAR(ESP_Enabled, true);
 CFGVAR(ESP_Outline, true);
+CFGVAR(ESP_EnemyOnly, true);
 CFGVAR(ESP_Box, true);
 CFGVAR(ESP_Name, true);
 CFGVAR(ESP_Health, true);
@@ -55,6 +57,15 @@ CFGVAR(ESP_HealthLow, Color_t({ 255, 83, 83, 255 }));
 CFGVAR(ESP_HealthHigh, Color_t({ 83, 255, 91, 255 }));
 CFGVAR(ESP_ArmourLow, Color_t({ 132, 83, 255, 255 }));
 CFGVAR(ESP_ArmourHigh, Color_t({ 83, 241, 255, 255 }));
+
+CFGVAR(Chams_Enabled, true);
+CFGVAR(Chams_EnemyOnly, true);
+CFGVAR(Chams_OccludedMaterial, 1); // None, Shaded, Flat, Shiny
+CFGVAR(Chams_UnoccludedMaterial, 0); // None, Shaded, Flat, Shiny
+CFGVAR(Chams_OccludedUseCustomColor, false);
+CFGVAR(Chams_UnoccludedUseCustomColor, false);
+CFGVAR(Chams_OccludedColor, Color_t({ 255,255,255,255 }));
+CFGVAR(Chams_UnoccludedColor, Color_t({ 255,255,255,255 }));
 
 CFGVAR(Colors_OutlineColor, Color_t({ 0, 0, 0, 255 }));
 CFGVAR(Colors_CondColor, Color_t({ 254, 202, 87, 255 }));

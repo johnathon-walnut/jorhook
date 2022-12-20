@@ -32,7 +32,7 @@ void CESP::Run()
 
 	const int nLocalTeamnum = pLocal->m_iTeamNum();
 
-	for (const auto& pEntity : G::EntityCache.GetGroup(GroupType_t::PLAYERS_ENEMIES))
+	for (const auto& pEntity : V::ESP_EnemyOnly ? G::EntityCache.GetGroup(GroupType_t::PLAYERS_ENEMIES) : G::EntityCache.GetGroup(GroupType_t::PLAYERS_ALL))
 	{
 		if (pEntity->deadflag() || 
 			pEntity->IsDormant() || 

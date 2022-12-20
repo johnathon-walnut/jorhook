@@ -235,6 +235,7 @@
     <ClCompile Include="SourceEngine\Hooks\ClientModeShared_DoPostScreenSpaceEffects.cpp" />
     <ClCompile Include="SourceEngine\Features\Glow\Glow.cpp" />
     <ClCompile Include="SourceEngine\Features\Chams\Chams.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\CTFPlayer_AvoidPlayers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceEngine\Utils\Math\Math.h">
@@ -425,8 +426,5 @@
     <ClInclude Include="SourceEngine\SDK\Interfaces\KeyValues\KeyValues.h" />
     <ClInclude Include="SourceEngine\Features\Glow\Glow.h" />
     <ClInclude Include="SourceEngine\Features\Chams\Chams.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="jorhook.rc" />
   </ItemGroup>
 </Project>

@@ -1,13 +1,16 @@
 #pragma once
 #include "../../SDK/SDK.h"
 
+#include <functional>
+
 enum struct EItemType {
 	DEFAULT,
 	INT,
 	FLOAT,
 	BOOL,
 	COLOR,
-	KEY
+	KEY,
+	BUTTON
 };
 
 class CItemBase
@@ -16,6 +19,16 @@ public:
 	std::string m_Name = {};
 	EItemType e_Type = EItemType::DEFAULT;
 	CItemBase(EItemType type, const std::string &name) : e_Type(type), m_Name(name) {};
+};
+
+class CItemButton : public CItemBase
+{
+public:
+	std::function<void()> m_Ptr = {};
+	float m_flTimePressed = 0.f;
+	CItemButton(const std::string& name, std::function<void()> ptr) : CItemBase(EItemType::BUTTON, name), m_Ptr(ptr)
+	{
+	}
 };
 
 class CItemInt : public CItemBase

@@ -67,6 +67,8 @@ namespace InputHelper
 	}
 }
 
+#define COLOR_OPTION(name, var) new CItemClrGroup { name, { new CItemClr("Red", &var, EClrType::r), new CItemClr("Green", &var, EClrType::g), new CItemClr("Blue", &var, EClrType::b), new CItemClr("Alpha", &var, EClrType::a) }, false, EItemType::COLOR, &var}
+
 void CMenu::CreateLists()
 {
 	static bool bDone = false;
@@ -77,8 +79,19 @@ void CMenu::CreateLists()
 		{
 			new CItemList
 			{
-				"Misc",
+				"Main",
 				{
+					new CItemGroup
+					{
+						"Aimbot",
+						{
+							new CItemBool("Enabled", &V::Aimbot_Enabled),
+							new CItemKey("Aim key", &V::Aimbot_AimKey),
+							new CItemInt("Hitbox", &V::Aimbot_Hitbox, { {0, "Auto"}, {1, "Head"}, {2, "Body"}}, 0, 2),
+							new CItemInt("FoV max", &V::Aimbot_FoV,{}, 0, 180),
+
+						}
+					},
 					new CItemGroup
 					{
 						"Movement",
@@ -88,11 +101,52 @@ void CMenu::CreateLists()
 					},
 					new CItemGroup
 					{
-						"Menu",
+						"Exploits",
 						{
-							new CItemInt("List Width", &V::Menu_ListWidth),
-							new CItemInt("List bar height", &V::Menu_ListBarH),
-							new CItemInt("Group height", &V::Menu_GroupH),
+							new CItemKey("Sequence freezing", &V::Exploits_SequenceFreezing_Key),
+							new CItemInt("Sequence freeze value", &V::Exploits_SequenceFreezing_Value),
+							new CItemKey("Airstuck key", &V::Exploits_Airstuck_Key),
+						}
+					},
+					new CItemGroup
+					{
+						"Config",
+						{
+							new CItemButton("Save", []() { CFG::Save("jorhook"); }),
+							new CItemButton("Load", []() { CFG::Load("jorhook"); }),
+						}
+					}
+				}
+			},
+
+			new CItemList
+			{
+				"Visuals",
+				{
+					new CItemGroup
+					{
+						"Player ESP",
+						{
+							new CItemBool("Enabled", &V::ESP_Enabled),
+							new CItemBool("Outlined", &V::ESP_Outline),
+							new CItemBool("Enemy only", &V::ESP_EnemyOnly),
+							new CItemBool("Name", &V::ESP_Name),
+							new CItemBool("Box", &V::ESP_Box),
+							new CItemBool("Health", &V::ESP_Health),
+							new CItemBool("Armour", &V::ESP_Armour),
+							new CItemBool("Distance", &V::ESP_Distance),
+						}
+					},
+					new CItemGroup
+					{
+						"Player chams",
+						{
+							new CItemBool("Chams_Enabled", &V::Chams_Enabled),						//, true);
+							new CItemBool("Enemy only", &V::Chams_EnemyOnly),
+							new CItemInt("Invisible material", &V::Chams_OccludedMaterial, {{0, "None"}, {1, "Shaded"}, {2, "Flat"}}, 0, 2),						//, 1); // None, Shaded, Flat, Shiny
+							new CItemInt("Visible material", &V::Chams_UnoccludedMaterial, {{0, "None"}, {1, "Shaded"}, {2, "Flat"}}, 0, 2),						//, 0); // None, Shaded, Flat, Shiny
+							new CItemBool("Invis use color", &V::Chams_OccludedUseCustomColor),						//, false);
+							new CItemBool("Vis use color", &V::Chams_UnoccludedUseCustomColor),						//, false);
 						}
 					},
 					new CItemGroup
@@ -106,56 +160,15 @@ void CMenu::CreateLists()
 					},
 					new CItemGroup
 					{
-						"Exploits",
+						"Menu",
 						{
-							new CItemKey("Sequence freezing", &V::Exploits_SequenceFreezing_Key),
-							new CItemInt("Sequence freeze value", &V::Exploits_SequenceFreezing_Value),
-							new CItemKey("Airstuck key", &V::Exploits_Airstuck_Key),
+							new CItemInt("List Width", &V::Menu_ListWidth),
+							new CItemInt("List bar height", &V::Menu_ListBarH),
+							new CItemInt("Group height", &V::Menu_GroupH),
 						}
 					},
 				}
 			},
-
-			new CItemList
-			{
-				"Aimbot",
-				{
-					new CItemGroup
-					{
-						"Main",
-						{
-							new CItemBool("Enabled", &V::Aimbot_Enabled),
-							new CItemKey("Aim key", &V::Aimbot_AimKey),
-							new CItemInt("Hitbox", &V::Aimbot_Hitbox, { {0, "Auto"}, {1, "Head"}, {2, "Body"}}, 0, 2),
-							new CItemInt("FoV max", &V::Aimbot_FoV,{}, 0, 180),
-
-						}
-					}
-
-				}
-			},
-
-			new CItemList
-			{
-				"ESP",
-				{
-					new CItemGroup
-					{
-						"Players",
-						{
-							new CItemBool("Enabled", &V::ESP_Enabled),
-							new CItemBool("Outlined", &V::ESP_Outline),
-							new CItemBool("Name", &V::ESP_Name),
-							new CItemBool("Box", &V::ESP_Box),
-							new CItemBool("Health", &V::ESP_Health),
-							new CItemBool("Armour", &V::ESP_Armour),
-							new CItemBool("Distance", &V::ESP_Distance),
-						}
-					}
-				}
-			},
-
-#define COLOR_OPTION(name, var) new CItemClrGroup { name, { new CItemClr("Red", &var, EClrType::r), new CItemClr("Green", &var, EClrType::g), new CItemClr("Blue", &var, EClrType::b), new CItemClr("Alpha", &var, EClrType::a) }, false, EItemType::COLOR, &var}
 
 			new CItemList
 			{
@@ -174,6 +187,8 @@ void CMenu::CreateLists()
 					COLOR_OPTION("Health high", V::ESP_HealthHigh),
 					COLOR_OPTION("Armour low", V::ESP_ArmourLow),
 					COLOR_OPTION("Armour high", V::ESP_ArmourHigh),
+					COLOR_OPTION("Occluded chams", V::Chams_OccludedColor),
+					COLOR_OPTION("Unoccluded chams", V::Chams_UnoccludedColor),
 				}
 			}
 		};
@@ -395,6 +410,31 @@ void CMenu::Run()
 
 									//value
 									G::Draw.StringCenterV(FONT_MENU, nDrawValX, nDrawY, DrawCol, "%d", *reinterpret_cast<int*>(Int->m_Ptr));
+								}
+
+								break;
+							}
+
+							case EItemType::BUTTON:
+							{
+								CItemButton* Button = reinterpret_cast<CItemButton*>(Item);
+
+								G::Draw.StringCenterV(FONT_MENU, (nGroupX + V::Menu_ListWidth / 2) + 1, nDrawY, DrawCol, "%s", Button->m_Name.c_str());
+
+								float flTime = I::Engine->Time();
+
+								float flDeltaTime = flTime - Button->m_flTimePressed;
+
+								if (bHovered)
+								{
+									if (InputHelper::IsPressed(VK_LBUTTON))
+									{
+										if (flDeltaTime > 0.1f)
+										{
+											Button->m_Ptr();
+											Button->m_flTimePressed = I::Engine->Time();
+										}
+									}
 								}
 
 								break;

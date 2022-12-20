@@ -4,7 +4,7 @@
 
 class CChams
 {
-	IMaterial* m_pMatShaded, * m_pMatFlat, * m_pMatShiny;
+	IMaterial* m_pMatShaded, * m_pMatFlat;
 public:
 	void Run();
 	void Cleanup();

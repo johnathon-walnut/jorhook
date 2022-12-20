@@ -23,6 +23,17 @@ void Draw2Color(C_BaseEntity* pEntity, IMaterial* matUnoccluded, IMaterial* matO
 
             pAttachment = pAttachment->NextMovePeer();
         }
+
+        if (pEntity->IsPlayer())
+        {
+            if (auto pWeapon = pEntity->GetActiveWeapon())
+            {
+                if (pWeapon->ShouldDraw())
+                {
+                    pWeapon->DrawModel(STUDIO_RENDER | STUDIO_NOSHADOWS);
+                }
+            }
+        }
     };
 
     auto pRenderContext = I::MaterialSystem->GetRenderContext();
@@ -36,7 +47,6 @@ void Draw2Color(C_BaseEntity* pEntity, IMaterial* matUnoccluded, IMaterial* matO
     pRenderContext->SetStencilEnable(true);
     {
         I::ModelRender->ForcedMaterialOverride(matUnoccluded);
-       
 
         //unoccluded
         {
@@ -53,6 +63,8 @@ void Draw2Color(C_BaseEntity* pEntity, IMaterial* matUnoccluded, IMaterial* matO
 
             DrawEntityAndAttachments();
         }
+
+        I::ModelRender->ForcedMaterialOverride(nullptr);
 
         I::ModelRender->ForcedMaterialOverride(matOccluded);
 
@@ -81,6 +93,14 @@ void Draw2Color(C_BaseEntity* pEntity, IMaterial* matUnoccluded, IMaterial* matO
     I::RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 }
 
+/*
+CFGVAR(Chams_Enabled, true);
+CFGVAR(Chams_OccludedMaterial, 1); // None, Shaded, Flat, Shiny
+CFGVAR(Chams_UnoccludedMaterial, 0); // None, Shaded, Flat, Shiny
+CFGVAR(Chams_OccludedCustomColor, false);
+CFGVAR(Chams_UnoccludedCustomColor, false);
+*/
+
 void CChams::Run()
 {
 	if (!I::Engine->IsInGame())
@@ -102,15 +122,67 @@ void CChams::Run()
 		return;
 	}
 
+    if (!m_pMatFlat)
+    {
+        static auto kv = new KeyValues("UnlitGeneric");
+        kv->SetString("$basetexture", "vgui/white_additive");
+
+        m_pMatFlat = I::MaterialSystem->CreateMaterial("jorhook_flat", kv);
+        m_pMatFlat->IncrementReferenceCount();
+        return;
+    }
+
 	int nLocalTeam = 0;
 	if (const auto& pLocal = G::EntityCache.pLocal)
 	{
 		nLocalTeam = pLocal->m_iTeamNum();
 	}
 
-	for (const auto& Player : G::EntityCache.GetGroup(GroupType_t::PLAYERS_ALL))
+    IMaterial* pOccludedMaterial = nullptr;
+    switch (V::Chams_OccludedMaterial)
+    {
+        case 1:
+        {
+            pOccludedMaterial = m_pMatShaded;
+            break;
+        }
+        case 2:
+        {
+            pOccludedMaterial = m_pMatFlat;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    IMaterial* pUnoccludedMaterial = nullptr;
+    switch (V::Chams_UnoccludedMaterial)
+    {
+        case 1:
+        {
+            pUnoccludedMaterial = m_pMatShaded;
+            break;
+        }
+        case 2:
+        {
+            pUnoccludedMaterial = m_pMatFlat;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+	for (const auto& Player : V::Chams_EnemyOnly ? G::EntityCache.GetGroup(GroupType_t::PLAYERS_ENEMIES) : G::EntityCache.GetGroup(GroupType_t::PLAYERS_ALL))
 	{
-        Draw2Color(Player, nullptr, m_pMatShaded, { 255,255,255,255 }, F::ESP.GetEntityColor(Player, nLocalTeam));
+        const Color_t &clr = F::ESP.GetEntityColor(Player, nLocalTeam);
+        Draw2Color(Player, 
+                   pUnoccludedMaterial, pOccludedMaterial, 
+                   V::Chams_UnoccludedUseCustomColor ? V::Chams_UnoccludedColor : clr,
+                   V::Chams_OccludedUseCustomColor ? V::Chams_OccludedColor : clr);
 	}
 }
 
@@ -122,4 +194,11 @@ void CChams::Cleanup()
 		m_pMatShaded->DeleteIfUnreferenced();
 		m_pMatShaded = nullptr;
 	}
+
+    if (m_pMatFlat)
+    {
+        m_pMatFlat->DecrementReferenceCount();
+        m_pMatFlat->DeleteIfUnreferenced();
+        m_pMatFlat = nullptr;
+    }
 }
