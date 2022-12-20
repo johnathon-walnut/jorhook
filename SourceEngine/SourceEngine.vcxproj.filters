@@ -230,6 +230,11 @@
     <ClCompile Include="SourceEngine\Utils\ResourceInfo.cpp" />
     <ClCompile Include="SourceEngine\Features\Aimbot\Aimbot.cpp" />
     <ClCompile Include="SourceEngine\Features\ESP\ESP.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\CL_Move.cpp" />
+    <ClCompile Include="SourceEngine\SDK\Interfaces\KeyValues\KeyValues.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\ClientModeShared_DoPostScreenSpaceEffects.cpp" />
+    <ClCompile Include="SourceEngine\Features\Glow\Glow.cpp" />
+    <ClCompile Include="SourceEngine\Features\Chams\Chams.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceEngine\Utils\Math\Math.h">
@@ -416,12 +421,12 @@
     <ClInclude Include="SourceEngine\Features\Menu\JORHOOK.h" />
     <ClInclude Include="SourceEngine\Features\Aimbot\Aimbot.h" />
     <ClInclude Include="SourceEngine\Features\ESP\ESP.h" />
+    <ClInclude Include="SourceEngine\SDK\Interfaces\MaterialSystem\MaterialSystem.h" />
+    <ClInclude Include="SourceEngine\SDK\Interfaces\KeyValues\KeyValues.h" />
+    <ClInclude Include="SourceEngine\Features\Glow\Glow.h" />
+    <ClInclude Include="SourceEngine\Features\Chams\Chams.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="jorhook.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SourceEngine\Features\Menu\jorhook.bin" />
-    <None Include="SourceEngine\Features\Menu\jorhook.vtf" />
   </ItemGroup>
 </Project>

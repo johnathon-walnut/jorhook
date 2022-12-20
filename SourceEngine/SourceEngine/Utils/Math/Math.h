@@ -541,6 +541,27 @@ namespace Math
 		vector[2] = float(-sin(pitch));
 	}
 
+
+// BUGBUG: Why do we need both of these?
+	inline float AngleDiff(float destAngle, float srcAngle)
+	{
+		float delta;
+
+		delta = fmodf(destAngle - srcAngle, 360.0f);
+		if (destAngle > srcAngle)
+		{
+			if (delta >= 180)
+				delta -= 360;
+		}
+		else
+		{
+			if (delta <= -180)
+				delta += 360;
+		}
+		return delta;
+	}
+
+
 	inline void VectorAngles(const Vec3 &forward, Vec3 &angles)
 	{
 		float tmp, yaw, pitch;

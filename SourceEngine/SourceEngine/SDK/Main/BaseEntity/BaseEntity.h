@@ -180,6 +180,7 @@ public:
 	int DrawModel(int flags);
 	int GetClassId();
 	int GetMaxHealth();
+	bool ShouldDraw();
 	const Vec3& GetRenderAngles();
 	void SetRenderAngles(const Vec3& v);
 	void SetAbsOrigin(const Vec3& v);

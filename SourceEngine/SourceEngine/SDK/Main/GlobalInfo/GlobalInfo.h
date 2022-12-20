@@ -15,6 +15,8 @@ struct GlobalInfo_t
 	bool bNoInterpolation = true;
 	Vec3 vecPredictedPos = Vec3();
 
+	Vec3 vecPunchAngles = Vec3();
+
 	//Fuck
 	bool m_bDrawMenu = false;
 	int m_nFocusOverlay = 0;

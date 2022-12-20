@@ -39,6 +39,11 @@ MAKE_HOOK(ClientModeShared_CreateMove, GetVFuncPtr(I::ClientMode, 21), bool, __f
 		{
 			gGlobalInfo.bWeaponCanShoot = true;
 		}
+
+		if (pLocal->m_iClass() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_PRIMARY)
+		{
+			gGlobalInfo.bWeaponCanShoot = true;
+		}
 	}
 
 	Vec3  vOldAngles = pCmd->viewangles;
@@ -47,9 +52,15 @@ MAKE_HOOK(ClientModeShared_CreateMove, GetVFuncPtr(I::ClientMode, 21), bool, __f
 
 	F::Movement.DoBunnyhop(pCmd);
 
-	if (GetAsyncKeyState('R') & 0x1)
+	if (GetAsyncKeyState(V::Exploits_SequenceFreezing_Key))
 	{
-		I::CVars->ConsolePrintf("%d", pLocal->m_iClass());
+		if (pLocal->IsAlive())
+		{
+			if (auto pNetChannel = I::Engine->GetNetChannelInfo())
+			{
+				pNetChannel->m_nOutSequenceNr += V::Exploits_SequenceFreezing_Value;
+			}
+		}
 	}
 
 	F::Prediction.Start(pCmd);

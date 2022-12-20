@@ -5,13 +5,20 @@
 //Or then just don't hook WndProc idc
 
 #include "Features/Menu/Menu.h"
+#include "Features/Glow/Glow.h"
+#include "Features/Chams/Chams.h"
 
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
 	//Util::InitDebug();
 
+	Sleep(1000);
+
 	I::Steam.Initialize();
 	I::Initialize();
+
+	Sleep(1000);
+
 	F::HookManager.Initialize();
 	F::Menu.m_Module = reinterpret_cast<HMODULE>(lpParam);
 
@@ -61,6 +68,9 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	}
 
 	Sleep(1000);
+
+	F::Chams.Cleanup();
+	F::Glow.Cleanup();
 
 	//Util::ReleaseDebug();
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);

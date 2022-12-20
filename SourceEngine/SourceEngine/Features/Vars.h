@@ -73,3 +73,9 @@ CFGVAR(Aimbot_FoV, 60);
 
 CFGVAR(Misc_FoV, 120);
 CFGVAR(Misc_Show_Aimbot_FoV, true);
+CFGVAR(Misc_Remove_Visual_Punch, true);
+
+CFGVAR(Exploits_SequenceFreezing_Key, 82);
+CFGVAR(Exploits_SequenceFreezing_Value, 900);
+CFGVAR(Exploits_Airstuck_Key, 72);
+CFGVAR(Exploits_Speedhack_Key, 70);

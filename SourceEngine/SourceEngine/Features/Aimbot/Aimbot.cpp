@@ -23,6 +23,7 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 
 	if (!GetAsyncKeyState(V::Aimbot_AimKey))
 	{
+		gGlobalInfo.nCurrentTargetIdx = -1;
 		return;
 	}
 
@@ -52,6 +53,7 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 
 		Target_t target = {};
 		target.pEntity = pEntity;
+		target.nIndex = pEntity->entindex();
 		switch (V::Aimbot_Hitbox)
 		{
 			case 0: //auto
@@ -80,6 +82,10 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 		}
 
 		target.angleTo = Math::CalcAngle(pLocal->m_vecOrigin() + pLocal->m_vecViewOffset(), target.aimedBonePosition);
+		if (!gGlobalInfo.vecPunchAngles.IsZero())
+		{
+			target.angleTo -= gGlobalInfo.vecPunchAngles;
+		}
 		target.fovTo = Math::CalcFov(pCmd->viewangles, target.angleTo);
 
 		vecPlayers.push_back(target);
@@ -93,6 +99,11 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 	auto cl_interp = I::CVars->FindVar("cl_interp");
 	auto cl_interp_ratio = I::CVars->FindVar("cl_interp_ratio");
 	auto cl_cmdrate = I::CVars->FindVar("cl_cmdrate");
+
+	if (vecPlayers.empty())
+	{
+		gGlobalInfo.nCurrentTargetIdx = -1;
+	}
 
 	for (const auto& target : vecPlayers)
 	{
@@ -131,6 +142,10 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 
 			I::DebugOverlay->AddBoxOverlay(target.aimedBonePosition, { -2,-2,-2 }, { 2,2,2 }, { 0,0,0 }, 255, 0, 0, 255, 1.0f);
 			m_bSilent = true;
+
+			gGlobalInfo.nCurrentTargetIdx = target.nIndex;
+
+			return;
 		}
 
 	}

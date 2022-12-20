@@ -304,6 +304,13 @@ int C_BaseEntity::GetMaxHealth()
 	return GetVFunc<FN>(this, 107)(this);
 }
 
+bool C_BaseEntity::ShouldDraw()
+{
+	void* renderable = (PVOID)(this + 0x4);
+	typedef const bool(__thiscall* FN)(PVOID);
+	return GetVFunc<FN>(renderable, 3)(renderable);
+}
+
 bool C_BaseEntity::IsOnGround()
 {
 	return (this->m_fFlags() & FL_ONGROUND);

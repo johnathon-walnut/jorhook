@@ -147,7 +147,9 @@
   <ItemGroup>
     <ClCompile Include="SourceEngine\DLLMain.cpp" />
     <ClCompile Include="SourceEngine\Features\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="SourceEngine\Features\Chams\Chams.cpp" />
     <ClCompile Include="SourceEngine\Features\ESP\ESP.cpp" />
+    <ClCompile Include="SourceEngine\Features\Glow\Glow.cpp" />
     <ClCompile Include="SourceEngine\Features\Menu\Input\Input.cpp" />
     <ClCompile Include="SourceEngine\Features\Menu\Menu.cpp" />
     <ClCompile Include="SourceEngine\Features\Movement\Movement.cpp" />
@@ -156,7 +158,9 @@
     <ClCompile Include="SourceEngine\Hooks\BaseClient_FrameStageNotify.cpp" />
     <ClCompile Include="SourceEngine\Hooks\BaseClient_ShutDown.cpp" />
     <ClCompile Include="SourceEngine\Hooks\ClientModeShared_CreateMove.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\ClientModeShared_DoPostScreenSpaceEffects.cpp" />
     <ClCompile Include="SourceEngine\Hooks\ClientModeShared_OverrideView.cpp" />
+    <ClCompile Include="SourceEngine\Hooks\CL_Move.cpp" />
     <ClCompile Include="SourceEngine\Hooks\EngineVGui_Paint.cpp" />
     <ClCompile Include="SourceEngine\Hooks\Prediction_RunCommand.cpp" />
     <ClCompile Include="SourceEngine\Hooks\Surface_LockCursor.cpp" />
@@ -165,6 +169,7 @@
     <ClCompile Include="SourceEngine\SDK\Includes\MD5.cpp" />
     <ClCompile Include="SourceEngine\SDK\Interfaces\ConVar\ConVar.cpp" />
     <ClCompile Include="SourceEngine\SDK\Interfaces\Interfaces.cpp" />
+    <ClCompile Include="SourceEngine\SDK\Interfaces\KeyValues\KeyValues.cpp" />
     <ClCompile Include="SourceEngine\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="SourceEngine\SDK\Main\BaseCombatWeapon\BaseCombatWeapon.cpp" />
     <ClCompile Include="SourceEngine\SDK\Main\BaseEntity\BaseEntity.cpp" />
@@ -187,10 +192,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SourceEngine\Features\Aimbot\Aimbot.h" />
+    <ClInclude Include="SourceEngine\Features\Chams\Chams.h" />
     <ClInclude Include="SourceEngine\Features\ESP\ESP.h" />
+    <ClInclude Include="SourceEngine\Features\Glow\Glow.h" />
     <ClInclude Include="SourceEngine\Features\Menu\JORHOOK.h" />
     <ClInclude Include="SourceEngine\Features\Vars.h" />
     <ClInclude Include="SourceEngine\Hooks\Hook.h" />
+    <ClInclude Include="SourceEngine\SDK\Interfaces\KeyValues\KeyValues.h" />
+    <ClInclude Include="SourceEngine\SDK\Interfaces\MaterialSystem\MaterialSystem.h" />
     <ClInclude Include="SourceEngine\Utils\HookManager\HookManager.h" />
     <ClInclude Include="SourceEngine\Features\Menu\Input\Input.h" />
     <ClInclude Include="SourceEngine\Features\Menu\Menu.h" />
@@ -261,10 +270,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="jorhook.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SourceEngine\Features\Menu\jorhook.bin" />
-    <None Include="SourceEngine\Features\Menu\jorhook.vtf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

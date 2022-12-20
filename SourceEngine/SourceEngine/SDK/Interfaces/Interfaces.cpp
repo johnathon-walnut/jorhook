@@ -1,6 +1,6 @@
 #include "Interfaces.h"
 
-#define CHECKNULL(func) if (!func) MessageBoxA(NULL, #func " is nullptr!", "NULL INTERFACE", MB_ICONERROR);
+#define CHECKNULL(func) assert(func != nullptr)
 
 #define CLIENT_DLL		"client.dll"
 #define ENGINE_DLL		"engine.dll"
@@ -9,6 +9,7 @@
 #define MATSURFACE_DLL	"vguimatsurface.dll"
 #define VSTDLIB_DLL		"vstdlib.dll"
 #define STEAMCLIENT_DLL "SteamClient.dll"
+#define MATSYSTEM_DLL	"MaterialSystem.dll"
 
 void I::Initialize()
 {
@@ -74,6 +75,12 @@ void I::Initialize()
 
 	MatSystemSurface = reinterpret_cast<IMatSystemSurface*>(G::Interface.Get(MATSURFACE_DLL, VGUI_SURFACE_INTERFACE_VERSION));
 	CHECKNULL(MatSystemSurface);
+
+	MaterialSystem = reinterpret_cast<IMaterialSystem*>(G::Interface.Get(MATSYSTEM_DLL, MATERIAL_SYSTEM_INTERFACE_VERSION));
+	CHECKNULL(MaterialSystem);
+
+	ModelRender = reinterpret_cast<CModelRender*>(G::Interface.Get(ENGINE_DLL, VENGINE_MODELRENDER_INTERFACE));
+	CHECKNULL(ModelRender);
 }
 
 void C_SteamInterfaces::Initialize()

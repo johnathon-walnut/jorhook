@@ -21,6 +21,7 @@
 #include "DebugOverlay/DebugOverlay.h"
 #include "Steam/Steamworks.h"
 #include "Steam/SteamTypes.h"
+#include "MaterialSystem/MaterialSystem.h"
 
 class C_SteamInterfaces
 {
@@ -36,7 +37,8 @@ public:
 	void Initialize();
 };
 
-namespace I {
+namespace I
+{
 	inline C_BaseClientDLL* Client = nullptr;
 	inline C_ClientDLLSharedAppSystems* ClientShared = nullptr;
 	inline C_ClientModeShared* ClientMode = nullptr;
@@ -58,6 +60,8 @@ namespace I {
 	inline C_GameEventManager* GameEvent = nullptr; //Normally this would be another traitor but I added C_
 	inline C_RenderView* RenderView = nullptr;
 	inline IDebugOverlay* DebugOverlay = nullptr; //Back at it MF
+	inline IMaterialSystem* MaterialSystem = nullptr;
+	inline CModelRender* ModelRender = nullptr;
 
 	void Initialize();
 

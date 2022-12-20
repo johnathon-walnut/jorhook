@@ -29,6 +29,8 @@ public:
 	void Initialize();
 	void Release();
 
+	std::vector<CHook*>& GetHooks();
+
 	std::vector<CHook*> m_Hooks;
 };
 

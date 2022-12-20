@@ -6,7 +6,8 @@ enum struct EItemType {
 	INT,
 	FLOAT,
 	BOOL,
-	BYTE
+	COLOR,
+	KEY
 };
 
 class CItemBase
@@ -53,6 +54,41 @@ public:
 	}
 };
 
+class CItemKey : public CItemBase
+{
+public:
+	int* m_Ptr = nullptr;
+	bool m_bActive = false;
+	float m_flTimeActivated = 0.f;
+
+	CItemKey(const std::string& name, int* ptr) : CItemBase(EItemType::KEY, name), m_Ptr(ptr)
+	{
+	}
+
+	inline static std::string KeyCodeToString(int virtualKey)
+	{
+		switch (virtualKey)
+		{
+			case VK_LBUTTON: return "LButton";
+			case VK_RBUTTON: return "RButton";
+			case VK_MBUTTON: return "MButton";
+			case VK_XBUTTON1: return "XButton1";
+			case VK_XBUTTON2: return "XButton2";
+			case VK_SPACE: return "Space";
+			case 0x0: return "None";
+		}
+
+		CHAR output[32] = { "\0" };
+
+		if (const int result = GetKeyNameTextA(MapVirtualKeyA(virtualKey, MAPVK_VK_TO_VSC) << 16, output, 16))
+		{
+			return output;
+		}
+
+		return "Unknown";
+	}
+};
+
 enum class EClrType
 {
 	r, g, b, a
@@ -69,13 +105,8 @@ public:
 
 	int m_AliasIdx = 0;
 
-	CItemClr(const std::string& name,
-			 Color_t* ptr,
-			 EClrType type,
-			 std::vector<std::pair<int, std::string>> aliases = {},
-			 int min = 0,
-			 int max = 255)
-		: CItemBase(EItemType::BYTE, name), m_Type(type), m_Ptr(ptr), m_Aliases(aliases), m_Min(min), m_Max(max)
+	CItemClr(const std::string& name, Color_t* ptr, EClrType type, std::vector<std::pair<int, std::string>> aliases = {},
+			 int min = 0, int max = 255) : CItemBase(EItemType::COLOR, name), m_Type(type), m_Ptr(ptr), m_Aliases(aliases), m_Min(min), m_Max(max)
 	{
 		if (!m_Aliases.empty())
 		{
@@ -126,6 +157,13 @@ public:
 	std::string m_Name = {};
 	std::vector<CItemBase *> m_Items = {};
 	bool m_Open = false;
+	EItemType e_Type = EItemType::DEFAULT;
+};
+
+class CItemClrGroup : public CItemGroup
+{
+public:
+	Color_t* m_Clr;
 };
 
 class CItemList

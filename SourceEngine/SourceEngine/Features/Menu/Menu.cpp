@@ -100,9 +100,19 @@ void CMenu::CreateLists()
 						"Visuals",
 						{
 							new CItemInt("FoV override", &V::Misc_FoV,{},70, 150),
-							new CItemBool("Show aimbot FoV", &V::Misc_Show_Aimbot_FoV)
+							new CItemBool("Show aimbot FoV", &V::Misc_Show_Aimbot_FoV),
+							new CItemBool("Remove view punch", &V::Misc_Remove_Visual_Punch),
 						}
-					}
+					},
+					new CItemGroup
+					{
+						"Exploits",
+						{
+							new CItemKey("Sequence freezing", &V::Exploits_SequenceFreezing_Key),
+							new CItemInt("Sequence freeze value", &V::Exploits_SequenceFreezing_Value),
+							new CItemKey("Airstuck key", &V::Exploits_Airstuck_Key),
+						}
+					},
 				}
 			},
 
@@ -115,9 +125,10 @@ void CMenu::CreateLists()
 						"Main",
 						{
 							new CItemBool("Enabled", &V::Aimbot_Enabled),
+							new CItemKey("Aim key", &V::Aimbot_AimKey),
 							new CItemInt("Hitbox", &V::Aimbot_Hitbox, { {0, "Auto"}, {1, "Head"}, {2, "Body"}}, 0, 2),
 							new CItemInt("FoV max", &V::Aimbot_FoV,{}, 0, 180),
-							
+
 						}
 					}
 
@@ -144,7 +155,7 @@ void CMenu::CreateLists()
 				}
 			},
 
-#define COLOR_OPTION(name, var) new CItemGroup { name, { new CItemClr("Red", &var, EClrType::r), new CItemClr("Green", &var, EClrType::g), new CItemClr("Blue", &var, EClrType::b), new CItemClr("Alpha", &var, EClrType::a) }}
+#define COLOR_OPTION(name, var) new CItemClrGroup { name, { new CItemClr("Red", &var, EClrType::r), new CItemClr("Green", &var, EClrType::g), new CItemClr("Blue", &var, EClrType::b), new CItemClr("Alpha", &var, EClrType::a) }, false, EItemType::COLOR, &var}
 
 			new CItemList
 			{
@@ -159,6 +170,10 @@ void CMenu::CreateLists()
 					COLOR_OPTION("Overheal", V::Colors_OverhealColor),
 					COLOR_OPTION("Enemy", V::Colors_EnemyColor),
 					COLOR_OPTION("Team", V::Colors_TeamColor),
+					COLOR_OPTION("Health low", V::ESP_HealthLow),
+					COLOR_OPTION("Health high", V::ESP_HealthHigh),
+					COLOR_OPTION("Armour low", V::ESP_ArmourLow),
+					COLOR_OPTION("Armour high", V::ESP_ArmourHigh),
 				}
 			}
 		};
@@ -224,7 +239,7 @@ void CMenu::Run()
 
 		G::Draw.Rect(0, 0, G::ScreenSize.w, G::ScreenSize.h, { 0,0,0,180 });
 
-		G::Draw.String(FONT_ESP, 10, 20, { 255,255,255,255 }, "JORHOOK v1.0 - Use right click to increment");
+		G::Draw.String(FONT_ESP, 10, 20, { 255,255,255,255 }, "JORHOOK v1.1 - Use right click to increment");
 		G::Draw.String(FONT_ESP, 10, 34, { 255,255,255,255 }, "and left click to decrement values in the menu");
 		G::Draw.String(FONT_ESP, 10, 48, { 255,255,255,255 }, "Build date: " __DATE__);
 
@@ -275,6 +290,8 @@ void CMenu::Run()
 			{
 				CItemGroup* ItemGroup = ItemList->m_ItemGroups.at(nItemGroup);
 
+				
+
 				int nGroupX = posx;
 				int nGroupY = posy + V::Menu_ListBarH + (V::Menu_GroupH * nItemGroup) + (nDrawnItems * V::Menu_GroupH);
 
@@ -294,18 +311,30 @@ void CMenu::Run()
 					}
 				}
 
+				Color_t clr = bHovered ? V::Menu_GroupHover : V::Menu_GroupBG;
+
+				auto font = FONT_MENU;
+
+				if (ItemGroup->e_Type == EItemType::COLOR)
+				{
+					clr = bHovered ? V::Menu_GroupHover : *(reinterpret_cast<CItemClrGroup*>(ItemGroup))->m_Clr;	
+					if (!bHovered)
+					{
+						font = FONT_ESP_NAME;
+					}
+				}
+			
+
 				//main background
-				G::Draw.Rect(nGroupX + 1, nGroupY, V::Menu_ListWidth - 2, V::Menu_GroupH, bHovered ? V::Menu_GroupHover : V::Menu_GroupBG);
+				G::Draw.Rect(nGroupX + 1, nGroupY, V::Menu_ListWidth - 2, V::Menu_GroupH, clr);
 				//name
-				G::Draw.StringCenterV(FONT_MENU, nGroupX + (V::Menu_ListWidth / 2) + 1, nGroupY + V::Menu_GroupH / 2, V::Menu_Text, ItemGroup->m_Name.c_str());
+				G::Draw.StringCenterV(font, nGroupX + (V::Menu_ListWidth / 2) + 1, nGroupY + V::Menu_GroupH / 2, bHovered ? V::Menu_Text : Color_t{255, 255, 255, 255}, ItemGroup->m_Name.c_str());
 
 				if (ItemGroup->m_Open)
 				{
 					for (size_t nItems = 0; nItems < ItemGroup->m_Items.size(); nItems++)
 					{
 						CItemBase* Item = ItemGroup->m_Items.at(nItems);
-
-						m_OnAimbotFOV = Item->m_Name == "Aim FOV";
 
 						int nItemY = nGroupY + (V::Menu_GroupH * (nItems + 1));
 						bool bHovered = (x > nGroupX && x < (nGroupX + (V::Menu_ListWidth - 2)) && y > nItemY && y < (nItemY + V::Menu_GroupH));
@@ -371,7 +400,72 @@ void CMenu::Run()
 								break;
 							}
 
-							case EItemType::BYTE:
+							case EItemType::KEY:
+							{
+								CItemKey* Key = reinterpret_cast<CItemKey*>(Item);
+
+								G::Draw.StringCenterVOnly(FONT_MENU, nDrawX, nDrawY, DrawCol, "%s", Key->m_Name.c_str());
+
+								auto key = reinterpret_cast<int*>(Key->m_Ptr);
+
+								if (!Key->m_bActive)
+								{
+									if (bHovered)
+									{
+										if (InputHelper::IsPressed(VK_LBUTTON))
+										{
+											Key->m_bActive = true;
+											Key->m_flTimeActivated = I::Engine->Time();
+											break;
+										}
+									}
+									else
+									{
+										if (InputHelper::IsPressed(VK_LBUTTON))
+										{
+											Key->m_bActive = false;
+										}
+									}
+								}
+
+								if (Key->m_bActive)
+								{
+									G::Draw.StringCenterV(FONT_MENU, nDrawValX, nDrawY, DrawCol, "Press key");
+
+									if (InputHelper::IsPressed(VK_ESCAPE))
+									{
+										Key->m_bActive = false;
+										break;
+									}
+
+									float flTimeDifference = I::Engine->Time() - Key->m_flTimeActivated;
+
+									if (flTimeDifference > 0.1f)
+									{
+										for (short n = 0; n < 256; n++)
+										{
+											if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_INSERT || n == VK_MENU || n == VK_CONTROL || n == VK_SPACE)
+											{
+												if (InputHelper::IsPressed(n))
+												{
+													*key = n;
+													Key->m_bActive = false;
+													Key->m_flTimeActivated = 0.f;
+													break;
+												}
+											}
+										}
+									}
+								}
+								else
+								{
+									G::Draw.StringCenterV(FONT_MENU, nDrawValX, nDrawY, DrawCol, "%s", CItemKey::KeyCodeToString(*key).c_str());
+								}
+
+								break;
+							}
+
+							case EItemType::COLOR:
 							{
 								CItemClr* Int = reinterpret_cast<CItemClr*>(Item);
 
@@ -389,19 +483,19 @@ void CMenu::Run()
 											default:
 											case EClrType::r:
 											{
-												clr->r += 1; break;
+												if (clr->r != 255) { clr->r += 1; }; break;
 											}
 											case EClrType::g:
 											{
-												clr->g += 1; break;
+												if (clr->g != 255) { clr->g  += 1;}; break;
 											}
 											case EClrType::b:
 											{
-												clr->b += 1; break;
+												if (clr->b != 255) { clr->b  += 1;}; break;
 											}
 											case EClrType::a:
 											{
-												clr->a += 1; break;
+												if (clr->a != 255) { clr->a  += 1;}; break;
 											}
 										}
 									}
@@ -413,19 +507,19 @@ void CMenu::Run()
 											default:
 											case EClrType::r:
 											{
-												clr->r -= 1; break;
+												if (clr->r != 0) { clr->r -= 1; }; break;
 											}
 											case EClrType::g:
 											{
-												clr->g -= 1; break;
+												if (clr->g != 0) { clr->g  -= 1;}; break;
 											}
 											case EClrType::b:
 											{
-												clr->b -= 1; break;
+												if (clr->b != 0) { clr->b  -= 1;}; break;
 											}
 											case EClrType::a:
 											{
-												clr->a -= 1; break;
+												if (clr->a != 0) { clr->a  -= 1;}; break;
 											}
 										}
 									}
