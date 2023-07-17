@@ -201,6 +201,7 @@
     <ClInclude Include="SourceEngine\Hooks\Hook.h" />
     <ClInclude Include="SourceEngine\SDK\Interfaces\KeyValues\KeyValues.h" />
     <ClInclude Include="SourceEngine\SDK\Interfaces\MaterialSystem\MaterialSystem.h" />
+    <ClInclude Include="SourceEngine\Utils\FNV1A.h" />
     <ClInclude Include="SourceEngine\Utils\HookManager\HookManager.h" />
     <ClInclude Include="SourceEngine\Features\Menu\Input\Input.h" />
     <ClInclude Include="SourceEngine\Features\Menu\Menu.h" />

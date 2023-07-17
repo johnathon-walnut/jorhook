@@ -9,6 +9,7 @@ struct CHook
 {
 	void* m_pOriginalFN;
 	void* m_pInitFunction;
+	std::string m_sHookName;
 
 	inline void CreateHook(void* pSource, void* pDestination)
 	{
@@ -20,7 +21,7 @@ struct CHook
 		return reinterpret_cast<FN>(m_pOriginalFN);
 	}
 
-	CHook(void* pInitFunction);
+	CHook(std::string sHookName, void* pInitFunction);
 };
 
 class CHookManager
@@ -29,9 +30,11 @@ public:
 	void Initialize();
 	void Release();
 
-	std::vector<CHook*>& GetHooks();
-
-	std::vector<CHook*> m_Hooks;
+	std::unordered_map<std::string, CHook*>& GetMapHooks()
+	{
+		static std::unordered_map<std::string, CHook*> mapHooks;
+		return mapHooks;
+	}
 };
 
 MAKE_FEATURE(CHookManager, HookManager);

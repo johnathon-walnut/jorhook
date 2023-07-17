@@ -184,6 +184,57 @@ void CChams::Run()
                    V::Chams_UnoccludedUseCustomColor ? V::Chams_UnoccludedColor : clr,
                    V::Chams_OccludedUseCustomColor ? V::Chams_OccludedColor : clr);
 	}
+
+    if (V::Chams_ShowLocal && G::EntityCache.pLocal)
+    {
+        const Color_t &clr = F::ESP.GetEntityColor(G::EntityCache.pLocal, nLocalTeam);
+
+        Draw2Color(G::EntityCache.pLocal,
+                   				   pUnoccludedMaterial, pOccludedMaterial,
+                   				   V::Chams_UnoccludedUseCustomColor ? V::Chams_UnoccludedColor : clr,
+                   				   V::Chams_OccludedUseCustomColor ? V::Chams_OccludedColor : clr);
+    }
+
+    for (const auto& Building : V::Chams_EnemyOnly ? G::EntityCache.GetGroup(GroupType_t::PLAYERS_ENEMIES) : G::EntityCache.GetGroup(GroupType_t::PLAYERS_ALL))
+    {
+        auto owner = I::EntityList->GetClientEntityFromHandle(reinterpret_cast<C_BaseObject*>(Building)->m_hOwnerEntity());
+
+        if (!owner || !owner->IsPlayer())
+        {
+			continue;
+		}
+
+        const Color_t& clr = F::ESP.GetEntityColor(owner, nLocalTeam);
+
+		Draw2Color(Building,
+                   				   pUnoccludedMaterial, pOccludedMaterial,
+                   				   V::Chams_UnoccludedUseCustomColor ? V::Chams_UnoccludedColor : clr,
+                   				   V::Chams_OccludedUseCustomColor ? V::Chams_OccludedColor : clr);
+	}
+
+    for (const auto& Pickup : G::EntityCache.GetGroup(GroupType_t::WORLD_HEALTH))
+    {
+        Draw2Color(Pickup,
+                   pUnoccludedMaterial, pOccludedMaterial,
+                   V::Chams_UnoccludedUseCustomColor ? V::Chams_UnoccludedColor : V::Colors_HealthPack,
+                   V::Chams_OccludedUseCustomColor ? V::Chams_OccludedColor : V::Colors_HealthPack);
+    }
+
+    for (const auto& Pickup : G::EntityCache.GetGroup(GroupType_t::WORLD_AMMO))
+    {
+        Draw2Color(Pickup,
+                   pUnoccludedMaterial, pOccludedMaterial,
+                   V::Chams_UnoccludedUseCustomColor ? V::Chams_UnoccludedColor : V::Colors_AmmoPack,
+                   V::Chams_OccludedUseCustomColor ? V::Chams_OccludedColor : V::Colors_AmmoPack);
+    }
+
+    for (const auto& Pickup : G::EntityCache.GetGroup(GroupType_t::WORLD_ARMOR))
+    {
+        Draw2Color(Pickup,
+                   pUnoccludedMaterial, pOccludedMaterial,
+                   V::Chams_UnoccludedUseCustomColor ? V::Chams_UnoccludedColor : V::Colors_ArmourPack,
+                   V::Chams_OccludedUseCustomColor ? V::Chams_OccludedColor : V::Colors_ArmourPack);
+    }
 }
 
 void CChams::Cleanup()

@@ -1,20 +1,21 @@
 #include "HookManager.h"
 
-CHook::CHook(void* pInitFunction)
+CHook::CHook(std::string sHookName, void* pInitFunction)
 {
 	m_pInitFunction = pInitFunction;
+	this->m_sHookName = sHookName;
 
-	F::HookManager.GetHooks().push_back(this);
+	F::HookManager.GetMapHooks()[sHookName] = this;
 }
 
 void CHookManager::Initialize()
 {
 	assert(MH_Initialize() == MH_OK);
 	
-	for (const auto& Hook : GetHooks())
+	for (const auto& Hook : GetMapHooks())
 	{
-		reinterpret_cast<HookInitFN>(Hook->m_pInitFunction)();
-		I::CVars->ConsolePrintf("Hooking a function");
+		I::CVars->ConsolePrintf("[!] Hooking %s", Hook.first.c_str());
+		reinterpret_cast<void(__cdecl*)()>(Hook.second->m_pInitFunction)();
 	}
 
 	assert(MH_EnableHook(MH_ALL_HOOKS) == MH_OK);
@@ -23,10 +24,4 @@ void CHookManager::Initialize()
 void CHookManager::Release()
 {
 	assert(MH_Uninitialize() == MH_OK);
-}
-
-std::vector<CHook*>& CHookManager::GetHooks()
-{
-	static std::vector<CHook*> s_Hooks = {};
-	return s_Hooks;
 }

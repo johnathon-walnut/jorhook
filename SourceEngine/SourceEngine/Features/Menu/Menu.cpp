@@ -97,6 +97,7 @@ void CMenu::CreateLists()
 						"Movement",
 						{
 							new CItemBool("Bunnyhop", &V::Movement_Bunnyhop),
+							new CItemBool("No push", &V::Movement_NoPush),
 						}
 					},
 					new CItemGroup
@@ -130,6 +131,7 @@ void CMenu::CreateLists()
 							new CItemBool("Enabled", &V::ESP_Enabled),
 							new CItemBool("Outlined", &V::ESP_Outline),
 							new CItemBool("Enemy only", &V::ESP_EnemyOnly),
+							new CItemBool("Show local", &V::ESP_ShowLocal),
 							new CItemBool("Name", &V::ESP_Name),
 							new CItemBool("Box", &V::ESP_Box),
 							new CItemBool("Health", &V::ESP_Health),
@@ -141,12 +143,22 @@ void CMenu::CreateLists()
 					{
 						"Player chams",
 						{
-							new CItemBool("Chams_Enabled", &V::Chams_Enabled),						//, true);
+							new CItemBool("Enabled", &V::Chams_Enabled),						//, true);
 							new CItemBool("Enemy only", &V::Chams_EnemyOnly),
+							new CItemBool("Show local", &V::Chams_ShowLocal),
 							new CItemInt("Invisible material", &V::Chams_OccludedMaterial, {{0, "None"}, {1, "Shaded"}, {2, "Flat"}}, 0, 2),						//, 1); // None, Shaded, Flat, Shiny
 							new CItemInt("Visible material", &V::Chams_UnoccludedMaterial, {{0, "None"}, {1, "Shaded"}, {2, "Flat"}}, 0, 2),						//, 0); // None, Shaded, Flat, Shiny
 							new CItemBool("Invis use color", &V::Chams_OccludedUseCustomColor),						//, false);
 							new CItemBool("Vis use color", &V::Chams_UnoccludedUseCustomColor),						//, false);
+						}
+					},
+					new CItemGroup
+					{
+					"Player glow",
+						{
+							new CItemBool("Enabled", &V::Glow_Enabled),
+							new CItemBool("Enemy only", &V::Glow_EnemyOnly),
+							new CItemBool("Show local", &V::Glow_ShowLocal),
 						}
 					},
 					new CItemGroup
@@ -189,6 +201,10 @@ void CMenu::CreateLists()
 					COLOR_OPTION("Armour high", V::ESP_ArmourHigh),
 					COLOR_OPTION("Occluded chams", V::Chams_OccludedColor),
 					COLOR_OPTION("Unoccluded chams", V::Chams_UnoccludedColor),
+					COLOR_OPTION("Health pack", V::Colors_HealthPack),
+					COLOR_OPTION("Ammo pack", V::Colors_AmmoPack),
+					COLOR_OPTION("Armour pack", V::Colors_ArmourPack),
+
 				}
 			}
 		};
@@ -305,7 +321,7 @@ void CMenu::Run()
 			{
 				CItemGroup* ItemGroup = ItemList->m_ItemGroups.at(nItemGroup);
 
-				
+
 
 				int nGroupX = posx;
 				int nGroupY = posy + V::Menu_ListBarH + (V::Menu_GroupH * nItemGroup) + (nDrawnItems * V::Menu_GroupH);
@@ -332,18 +348,18 @@ void CMenu::Run()
 
 				if (ItemGroup->e_Type == EItemType::COLOR)
 				{
-					clr = bHovered ? V::Menu_GroupHover : *(reinterpret_cast<CItemClrGroup*>(ItemGroup))->m_Clr;	
+					clr = bHovered ? V::Menu_GroupHover : *(reinterpret_cast<CItemClrGroup*>(ItemGroup))->m_Clr;
 					if (!bHovered)
 					{
 						font = FONT_ESP_NAME;
 					}
 				}
-			
+
 
 				//main background
 				G::Draw.Rect(nGroupX + 1, nGroupY, V::Menu_ListWidth - 2, V::Menu_GroupH, clr);
 				//name
-				G::Draw.StringCenterV(font, nGroupX + (V::Menu_ListWidth / 2) + 1, nGroupY + V::Menu_GroupH / 2, bHovered ? V::Menu_Text : Color_t{255, 255, 255, 255}, ItemGroup->m_Name.c_str());
+				G::Draw.StringCenterV(font, nGroupX + (V::Menu_ListWidth / 2) + 1, nGroupY + V::Menu_GroupH / 2, bHovered ? V::Menu_Text : Color_t{ 255, 255, 255, 255 }, ItemGroup->m_Name.c_str());
 
 				if (ItemGroup->m_Open)
 				{
@@ -527,15 +543,15 @@ void CMenu::Run()
 											}
 											case EClrType::g:
 											{
-												if (clr->g != 255) { clr->g  += 1;}; break;
+												if (clr->g != 255) { clr->g += 1; }; break;
 											}
 											case EClrType::b:
 											{
-												if (clr->b != 255) { clr->b  += 1;}; break;
+												if (clr->b != 255) { clr->b += 1; }; break;
 											}
 											case EClrType::a:
 											{
-												if (clr->a != 255) { clr->a  += 1;}; break;
+												if (clr->a != 255) { clr->a += 1; }; break;
 											}
 										}
 									}
@@ -551,15 +567,15 @@ void CMenu::Run()
 											}
 											case EClrType::g:
 											{
-												if (clr->g != 0) { clr->g  -= 1;}; break;
+												if (clr->g != 0) { clr->g -= 1; }; break;
 											}
 											case EClrType::b:
 											{
-												if (clr->b != 0) { clr->b  -= 1;}; break;
+												if (clr->b != 0) { clr->b -= 1; }; break;
 											}
 											case EClrType::a:
 											{
-												if (clr->a != 0) { clr->a  -= 1;}; break;
+												if (clr->a != 0) { clr->a -= 1; }; break;
 											}
 										}
 									}

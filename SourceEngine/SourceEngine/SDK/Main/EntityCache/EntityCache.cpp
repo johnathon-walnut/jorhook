@@ -39,6 +39,57 @@ void C_EntityCache::Fill()
 					Groups[pEntity->m_iTeamNum() != pLocal->m_iTeamNum() ? GroupType_t::PLAYERS_ENEMIES : GroupType_t::PLAYERS_TEAMMATES].push_back(pEntity);
 					break;
 				}
+
+				case CBaseObject:
+				{
+					Groups[GroupType_t::BUILDINGS_ALL].push_back(pEntity);
+					Groups[((C_BaseObject*)pEntity)->m_iTeamNum() != pLocal->m_iTeamNum() ? GroupType_t::BUILDINGS_ENEMIES : GroupType_t::BUILDINGS_TEAMMATES].push_back(pEntity);
+				}
+
+				case CBaseAnimating:
+				{
+					/*
+						
+						
+						models/items/item_armor.mdl
+						
+						
+					*/
+					
+					const FNV1A_t uModelHash = FNV1A::Hash(pEntity->GetModelName());
+					switch (uModelHash)
+					{
+						case FNV1A::HashConst("models/items/ammopack_small.mdl"):
+						case FNV1A::HashConst("models/items/ammopack_medium.mdl"):
+						case FNV1A::HashConst("models/items/ammopack_large.mdl"):
+						{
+							Groups[GroupType_t::WORLD_AMMO].push_back(pEntity);
+							break;
+						}
+
+						case FNV1A::HashConst("models/items/medkit_small.mdl"):
+						case FNV1A::HashConst("models/items/medkit_medium.mdl"):
+						case FNV1A::HashConst("models/items/medkit_large.mdl"):
+						{
+							Groups[GroupType_t::WORLD_HEALTH].push_back(pEntity);
+							break;
+						}
+
+						case FNV1A::HashConst("models/items/item_armor.mdl"):
+						{
+							Groups[GroupType_t::WORLD_ARMOR].push_back(pEntity);
+							break;
+						}
+					}
+
+#ifdef _DEBUG
+					if (GetAsyncKeyState('T'))
+					{
+						const char* modelName = pEntity->GetModelName();
+						I::DebugOverlay->AddTextOverlay(pEntity->m_vecOrigin(), I::GlobalVars->interval_per_tick * 2, "%s", modelName);
+					}
+#endif
+				}
 				
 				default: break;
 			}

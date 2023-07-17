@@ -6,7 +6,7 @@
 #include "Pattern/Pattern.h"
 #include "Hash/Hash.h"
 #include "UtlVector/UtlVector.h"
-
+#include "FNV1A.h"
 #include <Windows.h>
 #include <unordered_map>
 #include <memory>

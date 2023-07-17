@@ -10,17 +10,12 @@
 
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
-	//Util::InitDebug();
-
 	Sleep(1000);
 
 	I::Steam.Initialize();
 	I::Initialize();
 
 	Sleep(1000);
-
-	F::HookManager.Initialize();
-	F::Menu.m_Module = reinterpret_cast<HMODULE>(lpParam);
 
 	G::Draw.InitFonts
 	({
@@ -29,26 +24,29 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		//FONT_ESP_NAME
 		{ 0x0, "Tahoma", 13, 0, FONTFLAG_OUTLINE },
 		//FONT_ESP_COND
-		{ 0x0, "Consolas", 10, 0, FONTFLAG_OUTLINE },
+		{ 0x0, "Small Fonts", 9, 0, FONTFLAG_OUTLINE },
 		//FONT_ESP_PICKUPS
 		{ 0x0, "Tahoma", 11, 0, FONTFLAG_OUTLINE },
 		//FONT_DEBUG
 		{ 0x0, "Arial", 16, 0, FONTFLAG_OUTLINE },
 		//FONT_MENU
 		{ 0x0, "Segoe UI", 14, 0, FONTFLAG_NONE }
-	});
+	 });
 
-	//CSteamID csLocal = gSteam.User->GetSteamID();
-	//csLocal.Render() = Steam ID (STEAM_0:1:201244158)
-	//csLocal.SteamRender() = Steam ID3 ([U:1:402488317])
+	Sleep(100);
 
+	F::HookManager.Initialize();
+
+	Sleep(100);
+
+	F::Menu.m_Module = reinterpret_cast<HMODULE>(lpParam);
+
+#ifdef _DEBUG
 	N::DumpTables();
+#endif
 
-	/*Util::PrintDebug("MainThread finished.\n");*/
+	I::CVars->ConsoleColorPrintf({ 255, 131, 131, 255 }, "\n[!] jorhook loaded\n");
 
-	I::CVars->ConsoleColorPrintf({ 255, 131, 131, 255 }, "[!] jorhook loaded\n");
-
-	//Stuck at this, as long as "panic" key is not pressed.
 	while (!(GetAsyncKeyState(VK_F11) & 0x8000))
 	{
 		std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -58,7 +56,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	Sleep(100);
 
-	I::CVars->ConsoleColorPrintf({ 255, 242, 131, 255 }, "[!] jorhook unloaded\n");
+	I::CVars->ConsoleColorPrintf({ 255, 242, 131, 255 }, "\n[!] jorhook unloaded\n");
 
 	F::HookManager.Release();
 
@@ -70,7 +68,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	Sleep(1000);
 
 	F::Chams.Cleanup();
-	F::Glow.Cleanup();
 
 	//Util::ReleaseDebug();
 	FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);

@@ -49,6 +49,35 @@ MAKE_HOOK(EngineVGui_Paint, GetVFuncPtr(I::EngineVGui, 13), void, __fastcall,
 			F::ESP.Run();
 			F::Menu.Run();
 			F::Aimbot.DrawFoVCircle();
+
+			G::Draw.StringCenter(FONT_MENU, G::ScreenSize.w / 2, G::ScreenSize.h / 2, { 255,255,255,255 }, "Ticks: %d", gGlobalInfo.nTicks);
+
+			if (const auto& pLocal = G::EntityCache.pLocal)
+			{
+				if (pLocal->IsAlive())
+				{
+					const Vec3& vecLocalPos = pLocal->m_vecOrigin();
+
+					for (const auto& Enemy : G::EntityCache.GetGroup(GroupType_t::PLAYERS_ENEMIES))
+					{
+						if (Enemy->deadflag())
+							continue;
+
+						if (Enemy->m_iClass() == CLASS_SPY)
+						{
+							if (Enemy->m_vecOrigin().DistTo(vecLocalPos) < 400)
+							{
+								if (G::VisCheck.Pos(pLocal, Enemy, pLocal->m_vecOrigin(), Enemy->m_vecOrigin()))
+								{
+									G::Draw.Rect(0, 0, G::ScreenSize.w, G::ScreenSize.h, { 255,0,0,100 });
+								}
+							}
+						}
+					}
+				}
+			}
+
+			
 		}
 		FinishDrawing(I::Surface);
 	}

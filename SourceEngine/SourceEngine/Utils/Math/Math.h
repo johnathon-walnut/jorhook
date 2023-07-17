@@ -460,18 +460,32 @@ namespace Math
 			output[i] = input.Dot((Vec3 &)matrix[i]) + matrix[i][3];
 	}
 
-	inline void AngleVectors(const Vec3 &angles, Vec3 *forward)
+	inline void AngleVectors(const Vec3& angles, Vec3* forward, Vec3* right = nullptr, Vec3* up = nullptr)
 	{
-		float sp, sy, cp, cy;
-
-		SinCos(DEG2RAD(angles.x), &sp, &cp);
-		SinCos(DEG2RAD(angles.y), &sy, &cy);
+		float sinRoll, sinPitch, sinYaw, cosRoll, cosPitch, cosYaw;
+		SinCos(DEG2RAD(angles.x), &sinPitch, &cosPitch);
+		SinCos(DEG2RAD(angles.y), &sinYaw, &cosYaw);
+		SinCos(DEG2RAD(angles.z), &sinRoll, &cosRoll);
 
 		if (forward)
 		{
-			forward->x = cp * cy;
-			forward->y = cp * sy;
-			forward->z = -sp;
+			forward->x = cosPitch * cosYaw;
+			forward->y = cosPitch * sinYaw;
+			forward->z = -sinPitch;
+		}
+
+		if (right)
+		{
+			right->x = (-1 * sinRoll * sinPitch * cosYaw + -1 * cosRoll * -sinYaw);
+			right->y = (-1 * sinRoll * sinPitch * sinYaw + -1 * cosRoll * cosYaw);
+			right->z = -1 * sinRoll * cosPitch;
+		}
+
+		if (up)
+		{
+			up->x = (cosRoll * sinPitch * cosYaw + -sinRoll * -sinYaw);
+			up->y = (cosRoll * sinPitch * sinYaw + -sinRoll * cosYaw);
+			up->z = cosRoll * cosPitch;
 		}
 	}
 

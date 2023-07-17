@@ -9,7 +9,7 @@ struct Target_t
 	float fovTo;
 };
 
-
+int s_OldButtons = 0;
 
 void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* pCmd)
 {
@@ -28,6 +28,8 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 	}
 
 	int nLocalClass = pLocal->m_iClass();
+
+	s_OldButtons = pCmd->buttons;
 
 	if (nLocalClass == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_PRIMARY)
 	{
@@ -93,7 +95,7 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 
 	std::sort(vecPlayers.begin(), vecPlayers.end(), [](const Target_t& a, const Target_t& b) -> bool
 			  {
-				  return (a.fovTo > b.fovTo);
+				  return (a.fovTo < b.fovTo);
 			  });
 
 	auto cl_interp = I::CVars->FindVar("cl_interp");
@@ -122,10 +124,13 @@ void CAimbot::Run(C_BaseEntity* pLocal, C_BaseCombatWeapon* pWeapon, C_UserCmd* 
 		if (gGlobalInfo.bWeaponCanShoot)
 		{
 			pCmd->tick_count = TIME_TO_TICKS(target.pEntity->m_flSimulationTime()) + std::max(cl_interp->GetFloat(), cl_interp_ratio->GetFloat() / cl_cmdrate->GetFloat());
-			pCmd->buttons |= IN_ATTACK;
 			if (nLocalClass == CLASS_SNIPER && pWeapon->GetSlot() == SLOT_PRIMARY)
 			{
 				pCmd->buttons &= ~IN_ATTACK;
+			}
+			else
+			{
+				pCmd->buttons |= IN_ATTACK;
 			}
 			Vec3 vecMove(pCmd->forwardmove, pCmd->sidemove, pCmd->upmove);
 			Vec3 vecMoveAng = Vec3();

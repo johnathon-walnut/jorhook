@@ -1,4 +1,4 @@
-#include "Hook.h"
+	#include "Hook.h"
 
 #include "../Features/Prediction/Prediction.h"
 #include "../Features/Aimbot/Aimbot.h"
@@ -51,13 +51,25 @@ MAKE_HOOK(ClientModeShared_CreateMove, GetVFuncPtr(I::ClientMode, 21), bool, __f
 	float flOldForwardMove = pCmd->forwardmove;
 
 	F::Movement.DoBunnyhop(pCmd);
+	F::Movement.DoAutostrafe(pLocal, pCmd);
 
-	if (GetAsyncKeyState(V::Exploits_SequenceFreezing_Key))
+	gGlobalInfo.bSequenceFreezing = !!GetAsyncKeyState(V::Exploits_SequenceFreezing_Key);
+
+	static int oldSequenceNr = 0;
+
+	if (gGlobalInfo.bSequenceFreezing)
 	{
 		if (pLocal->IsAlive())
 		{
 			if (auto pNetChannel = I::Engine->GetNetChannelInfo())
 			{
+				static Vec3 oldOrigin = pLocal->m_vecOrigin();
+				oldOrigin = pLocal->m_vecOrigin();
+				if (oldSequenceNr != pNetChannel->m_nOutSequenceNr)
+				{
+					pLocal->m_vecOrigin() = oldOrigin;
+				}
+				oldSequenceNr = pNetChannel->m_nOutSequenceNr + 1;
 				pNetChannel->m_nOutSequenceNr += V::Exploits_SequenceFreezing_Value;
 			}
 		}
@@ -68,6 +80,17 @@ MAKE_HOOK(ClientModeShared_CreateMove, GetVFuncPtr(I::ClientMode, 21), bool, __f
 		F::Aimbot.Run(pLocal, pWeapon, pCmd);
 	}
 	F::Prediction.End(pCmd);
+	
+	if (GetAsyncKeyState(V::Exploits_Anti_Knockback_Key))
+	{
+		pCmd->forwardmove = 0.0f;
+		pCmd->sidemove = 0.0f;
+
+		pCmd->viewangles.y = pLocal->m_vecVelocity().y;
+		pCmd->viewangles.x = 90.f;
+
+		F::Aimbot.m_bSilent = true;
+	}
 
 	return F::Aimbot.m_bSilent ? false : CALL_ORIGINAL(ecx, edx, input_sample_frametime, pCmd);
 }

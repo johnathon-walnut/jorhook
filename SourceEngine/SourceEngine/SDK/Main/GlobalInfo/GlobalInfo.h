@@ -17,11 +17,16 @@ struct GlobalInfo_t
 
 	Vec3 vecPunchAngles = Vec3();
 
+	bool bSequenceFreezing = false;
+	Vec3 vecLastPos = Vec3();
+
 	//Fuck
 	bool m_bDrawMenu = false;
 	int m_nFocusOverlay = 0;
 
 	VMatrix WorldToProjection = {};
+
+	int nTicks = 0;
 };
 
 inline GlobalInfo_t gGlobalInfo;

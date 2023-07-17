@@ -8,7 +8,7 @@ namespace H
 	namespace WndProc
 	{
 		void Initialize();
-		inline CHook Hook(Initialize);
+		inline CHook Hook("WndProc", Initialize);
 		LRESULT CALLBACK Detour(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	}
 }

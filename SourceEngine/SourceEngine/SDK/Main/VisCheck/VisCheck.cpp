@@ -6,6 +6,19 @@ bool C_TraceFilterHitscan::ShouldHitEntity(void* pEntityHandle, int nContentsMas
 {
 	C_BaseEntity* pEntity = reinterpret_cast<C_BaseEntity*>(pEntityHandle);
 
+	if (pEntity)
+	{
+		switch (pEntity->GetClassId())
+		{
+			case CFuncAreaPortalWindow:
+			case CFuncRespawnRoomVisualizer:
+			case CSniperDot:
+			{
+				return false;
+			}
+		}
+	}	
+
 	return (pEntityHandle != pSkip);
 }
 

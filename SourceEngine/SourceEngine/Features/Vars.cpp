@@ -51,7 +51,7 @@ void CFG::Save(const char* path)
 
 	outputFile.close();
 
-	I::CVars->ConsolePrintf("[!] Saved config: (%s)\n", path);
+	I::CVars->ConsolePrintf("\n[!] Saved config: (%s)\n", path);
 }
 
 void CFG::Load(const char* path)
@@ -103,5 +103,5 @@ void CFG::Load(const char* path)
 
 	inputFile.close();
 
-	I::CVars->ConsolePrintf("[!] Loaded config: (%s)\n", path);
+	I::CVars->ConsolePrintf("\n[!] Loaded config: (%s)\n", path);
 }

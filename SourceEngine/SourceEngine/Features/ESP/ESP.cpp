@@ -1,5 +1,73 @@
 #include "ESP.h"
 
+void CESP::DrawPlayer(C_BaseEntity* pEntity, PlayerInfo_t& pi, const Vec3& vLocalPos, int x, int y, int w, int h, int nLocalTeamnum)
+{
+	const int nClass = pEntity->m_iClass();
+	const int nHealth = pEntity->m_iHealth();
+	const int nMaxHealth = pEntity->GetMaxHealth();
+	const int nArmour = pEntity->m_ArmorValue();
+	const int nMaxArmour = GetMaxArmorValue(nClass);
+
+	const Color_t& entityColour = GetEntityColor(pEntity, nLocalTeamnum);
+
+	if (V::ESP_Box)
+	{
+		G::Draw.OutlinedRect(x, y, w, h, entityColour);
+		if (V::ESP_Outline)
+		{
+			G::Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, V::Colors_OutlineColor);
+			G::Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, V::Colors_OutlineColor);
+		}
+	}
+
+	if (V::ESP_Name)
+	{
+		const auto& pName = UTF8toWide(pi.name);
+		G::Draw.StringCenterW(FONT_ESP, x + (w / 2), y - 14, entityColour, pName.c_str());
+	}
+
+	int hbx = x;
+	int hby = y;
+
+	if (V::ESP_Health)
+	{
+		float flHealth = nHealth > nMaxHealth ? nMaxHealth : nHealth;
+		float flRatio = (static_cast<float>(nHealth) / static_cast<float>(nMaxHealth));
+		const Color_t healthColour = G::Draw.LerpColor(V::ESP_HealthLow, V::ESP_HealthHigh, Math::RemapValClamped(nHealth, 0, nMaxHealth, 0.0f, 1.0f));
+		G::Draw.Rect(hbx - 5, -1 + hby + h - (h * flRatio), 2, h * flRatio + 1, healthColour);
+		if (V::ESP_Outline)
+		{
+			G::Draw.OutlinedRect(hbx - 6, -2 + hby + h - (h * flRatio) + 1, 4, 2 + h * flRatio, V::Colors_OutlineColor);
+		}
+		hbx -= 5;
+	}
+
+	if (V::ESP_Armour)
+	{
+		float flHealth = nArmour > nMaxArmour ? nMaxArmour : nArmour;
+		float flRatio = (static_cast<float>(nArmour) / static_cast<float>(nMaxArmour));
+		const Color_t healthColour = G::Draw.LerpColor(V::ESP_ArmourLow, V::ESP_ArmourHigh, Math::RemapValClamped(nArmour, 0, nMaxArmour, 0.0f, 1.0f));
+		G::Draw.Rect(hbx - 5, -1 + hby + h - (h * flRatio), 2, h * flRatio + 1, healthColour);
+		if (V::ESP_Outline)
+		{
+			G::Draw.OutlinedRect(hbx - 6, -2 + hby + h - (h * flRatio) + 1, 4, 2 + h * flRatio, V::Colors_OutlineColor);
+		}
+	}
+
+	if (V::ESP_Distance)
+	{
+		const float flDistance = pEntity->m_vecOrigin().DistTo(vLocalPos);
+
+		G::Draw.StringCenter(FONT_ESP_NAME, x + (w / 2), y + h + 2, { 255,255,255,255 }, "[%dm]", static_cast<int>(flDistance * 0.01905f));
+	}
+
+	if (V::ESP_Class)
+	{
+		const auto& pClass = GetGameClassName(nClass);
+		G::Draw.StringW(FONT_ESP_COND, x + w + 2, y, entityColour, pClass.c_str());
+	}
+}
+
 void CESP::Run()
 {
 	if (!V::ESP_Enabled)
@@ -32,6 +100,129 @@ void CESP::Run()
 
 	const int nLocalTeamnum = pLocal->m_iTeamNum();
 
+	for (const auto& pEntity : G::EntityCache.GetGroup(GroupType_t::WORLD_HEALTH))
+	{
+		if (!GetDrawBounds(pEntity, vTrans, x, y, w, h))
+		{
+			continue;
+		}
+
+		if (V::ESP_Box)
+		{
+			G::Draw.OutlinedRect(x, y, w, h, V::Colors_HealthPack);
+			if (V::ESP_Outline)
+			{
+				G::Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, V::Colors_OutlineColor);
+				G::Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, V::Colors_OutlineColor);
+			}
+		}
+
+		if (V::ESP_Name)
+		{
+			G::Draw.StringCenterW(FONT_ESP, x + (w / 2), y - 14, V::Colors_HealthPack, L"Health");
+		}
+
+		if (V::ESP_Distance)
+		{
+			const float flDistance = pEntity->m_vecOrigin().DistTo(vLocalPos);
+
+			G::Draw.StringCenter(FONT_ESP_NAME, x + (w / 2), y + h + 2, { 255,255,255,255 }, "[%dm]", static_cast<int>(flDistance * 0.01905f));
+		}
+	}
+
+	for (const auto& pEntity : G::EntityCache.GetGroup(GroupType_t::BUILDINGS_ENEMIES))
+	{
+		auto classid = pEntity->GetClassId();
+
+		if (!GetDrawBounds(pEntity, vTrans, x, y, w, h))
+		{
+			continue;
+		}
+
+		if (V::ESP_Box)
+		{
+			G::Draw.OutlinedRect(x, y, w, h, V::Colors_AmmoPack);
+			if (V::ESP_Outline)
+			{
+				G::Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, V::Colors_OutlineColor);
+				G::Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, V::Colors_OutlineColor);
+			}
+		}
+
+		if (V::ESP_Name)
+		{
+			const char* szName = pEntity->GetClientClass()->m_pNetworkName;
+			G::Draw.StringCenter(FONT_ESP, x + (w / 2), y - 14, V::Colors_AmmoPack, "%s", szName);
+		}
+
+		if (V::ESP_Distance)
+		{
+			const float flDistance = pEntity->m_vecOrigin().DistTo(vLocalPos);
+
+			G::Draw.StringCenter(FONT_ESP_NAME, x + (w / 2), y + h + 2, { 255,255,255,255 }, "[%dm]", static_cast<int>(flDistance * 0.01905f));
+		}
+	}
+
+	for (const auto& pEntity : G::EntityCache.GetGroup(GroupType_t::WORLD_AMMO))
+	{
+		if (!GetDrawBounds(pEntity, vTrans, x, y, w, h))
+		{
+			continue;
+		}
+
+		if (V::ESP_Box)
+		{
+			G::Draw.OutlinedRect(x, y, w, h, V::Colors_AmmoPack);
+			if (V::ESP_Outline)
+			{
+				G::Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, V::Colors_OutlineColor);
+				G::Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, V::Colors_OutlineColor);
+			}
+		}
+
+		if (V::ESP_Name)
+		{
+			G::Draw.StringCenterW(FONT_ESP, x + (w / 2), y - 14, V::Colors_AmmoPack, L"Ammo");
+		}
+
+		if (V::ESP_Distance)
+		{
+			const float flDistance = pEntity->m_vecOrigin().DistTo(vLocalPos);
+
+			G::Draw.StringCenter(FONT_ESP_NAME, x + (w / 2), y + h + 2, { 255,255,255,255 }, "[%dm]", static_cast<int>(flDistance * 0.01905f));
+		}
+	}
+
+	for (const auto& pEntity : G::EntityCache.GetGroup(GroupType_t::WORLD_ARMOR))
+	{
+		if (!GetDrawBounds(pEntity, vTrans, x, y, w, h))
+		{
+			continue;
+		}
+
+		if (V::ESP_Box)
+		{
+			G::Draw.OutlinedRect(x, y, w, h, V::Colors_ArmourPack);
+			if (V::ESP_Outline)
+			{
+				G::Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, V::Colors_OutlineColor);
+				G::Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, V::Colors_OutlineColor);
+			}
+		}
+
+		if (V::ESP_Name)
+		{
+			G::Draw.StringCenterW(FONT_ESP, x + (w / 2), y - 14, V::Colors_ArmourPack, L"Armour");
+		}
+
+		if (V::ESP_Distance)
+		{
+			const float flDistance = pEntity->m_vecOrigin().DistTo(vLocalPos);
+
+			G::Draw.StringCenter(FONT_ESP_NAME, x + (w / 2), y + h + 2, { 255,255,255,255 }, "[%dm]", static_cast<int>(flDistance * 0.01905f));
+		}
+	}
+
 	for (const auto& pEntity : V::ESP_EnemyOnly ? G::EntityCache.GetGroup(GroupType_t::PLAYERS_ENEMIES) : G::EntityCache.GetGroup(GroupType_t::PLAYERS_ALL))
 	{
 		if (pEntity->deadflag() || 
@@ -51,79 +242,31 @@ void CESP::Run()
 			continue;
 		}
 
-		const int nClass = pEntity->m_iClass();
-		const int nHealth = pEntity->m_iHealth();
-		const int nMaxHealth = pEntity->GetMaxHealth();
-		const int nArmour = pEntity->m_ArmorValue();
-		const int nMaxArmour = GetMaxArmorValue(nClass);
+		DrawPlayer(pEntity, pi, vLocalPos, x, y, w, h, nLocalTeamnum);
+	}
 
-		const Color_t& entityColour = GetEntityColor(pEntity, nLocalTeamnum);
+	if (V::ESP_ShowLocal && G::EntityCache.pLocal)
+	{
+		auto pEntity = G::EntityCache.pLocal;
 
-		if (V::ESP_Box)
+		if (pEntity->deadflag() ||
+			pEntity->IsDormant() ||
+			pEntity->m_iTeamNum() == nLocalTeamnum)
 		{
-			G::Draw.OutlinedRect(x, y, w, h, entityColour);
-			if (V::ESP_Outline)
-			{
-				G::Draw.OutlinedRect(x - 1, y - 1, w + 2, h + 2, V::Colors_OutlineColor);
-				G::Draw.OutlinedRect(x + 1, y + 1, w - 2, h - 2, V::Colors_OutlineColor);
-			}
+			return;
 		}
 
-		if (V::ESP_Name)
+		if (!I::Engine->GetPlayerInfo(pEntity->entindex(), &pi))
 		{
-			const auto& pName = UTF8toWide(pi.name);
-			G::Draw.StringCenterW(FONT_ESP, x + (w / 2), y - 14, entityColour, pName.c_str());
+			return;
 		}
 
-		int hbx = x;
-		int hby = y;
-
-		if (V::ESP_Health)
+		if (!GetDrawBounds(pEntity, vTrans, x, y, w, h))
 		{
-			float flHealth = nHealth > nMaxHealth ? nMaxHealth : nHealth;
-			float flRatio = (static_cast<float>(nHealth) / static_cast<float>(nMaxHealth));
-			const Color_t healthColour = G::Draw.LerpColor(V::ESP_HealthLow, V::ESP_HealthHigh, Math::RemapValClamped(nHealth, 0, nMaxHealth, 0.0f, 1.0f));
-			G::Draw.Rect(hbx - 5, -1 + hby + h - (h * flRatio), 2, h * flRatio + 1, healthColour);
-			if (V::ESP_Outline)
-			{
-				G::Draw.OutlinedRect(hbx - 6, -2 + hby + h - (h * flRatio) + 1, 4, 2 + h * flRatio, V::Colors_OutlineColor);
-			}
-			hbx -= 5;
+			return;
 		}
 
-		if (V::ESP_Armour)
-		{
-			float flHealth = nArmour > nMaxArmour ? nMaxArmour : nArmour;
-			float flRatio = (static_cast<float>(nArmour) / static_cast<float>(nMaxArmour));
-			const Color_t healthColour = G::Draw.LerpColor(V::ESP_ArmourLow, V::ESP_ArmourHigh, Math::RemapValClamped(nArmour, 0, nMaxArmour, 0.0f, 1.0f));
-			G::Draw.Rect(hbx - 5, -1 + hby + h - (h * flRatio), 2, h * flRatio + 1, healthColour);
-			if (V::ESP_Outline)
-			{
-				G::Draw.OutlinedRect(hbx - 6, -2 + hby + h - (h * flRatio) + 1, 4, 2 + h * flRatio, V::Colors_OutlineColor);
-			}
-		}
-
-		if (V::ESP_Distance)
-		{
-			const float flDistance = pEntity->m_vecOrigin().DistTo(vLocalPos);
-
-			G::Draw.StringCenter(FONT_ESP_NAME, x + (w / 2), y + h + 2, { 255,255,255,255 }, "[%dm]", static_cast<int>(flDistance * 0.01905f));
-		}
-
-
-		/*
-		CFGVAR(ESP_Enabled, true);
-		CFGVAR(ESP_Outline, true);
-		CFGVAR(ESP_Box, true);
-		CFGVAR(ESP_Name, true);
-		CFGVAR(ESP_Health, true);
-		CFGVAR(ESP_Armour, true);
-		CFGVAR(ESP_Conditions, true);
-		CFGVAR(ESP_Distance, true);
-		CFGVAR(ESP_HealthLow, Color_t({ 255, 83, 83, 255 }));
-CFGVAR(ESP_HealthHigh, Color_t({ 83, 255, 91, 255 }));
-CFGVAR(ESP_ArmourLow, Color_t({ 132, 83, 255, 255 }));
-CFGVAR(ESP_ArmourHigh, Color_t({ 83, 241, 255, 255 }));*/
+		DrawPlayer(pEntity, pi, vLocalPos, x, y, w, h, nLocalTeamnum);
 	}
 }
 
@@ -248,6 +391,11 @@ int CESP::GetMaxArmorValue(int nClass)
 
 const Color_t CESP::GetEntityColor(C_BaseEntity* pEntity, int nLocalTeam)
 {
+	if (pEntity == G::EntityCache.pLocal)
+	{
+		return V::Colors_LocalColor;
+	}
+
 	Color_t* outColour = &V::Colors_OutlineColor;
 
 	if (pEntity->m_iTeamNum() == nLocalTeam)
@@ -278,4 +426,21 @@ const std::wstring CESP::UTF8toWide(const std::string& str)
 	std::wstring wstr(count, 0);
 	MultiByteToWideChar(CP_UTF8, 0, str.c_str(), str.length(), &wstr[0], count);
 	return wstr;
+}
+
+const std::wstring CESP::GetGameClassName(int nClass)
+{
+	switch (nClass)
+	{
+		default: return L"Unknown";
+		case CLASS_SCOUT:		return L"SCOUT";
+		case CLASS_SOLDIER:		return L"SOLDIER";
+		case CLASS_PYRO:		return L"PYRO";
+		case CLASS_DEMO:		return L"DEMO";
+		case CLASS_HEAVY:		return L"HEAVY";
+		case CLASS_ENGINEER:	return L"ENGINEER";
+		case CLASS_MEDIC:		return L"MEDIC";
+		case CLASS_SNIPER:		return L"SNIPER";
+		case CLASS_SPY:			return L"SPY";
+	}
 }

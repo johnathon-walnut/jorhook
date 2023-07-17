@@ -426,5 +426,6 @@
     <ClInclude Include="SourceEngine\SDK\Interfaces\KeyValues\KeyValues.h" />
     <ClInclude Include="SourceEngine\Features\Glow\Glow.h" />
     <ClInclude Include="SourceEngine\Features\Chams\Chams.h" />
+    <ClInclude Include="SourceEngine\Utils\FNV1A.h" />
   </ItemGroup>
 </Project>
